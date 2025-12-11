@@ -1,0 +1,203 @@
+{
+  "version": "0.1.0",
+  "tracks": [
+    {
+      "track_id": 1,
+      "name": "시티 서킷",
+      "theme": "urban",
+      "difficulty": "easy",
+      "laps": 3,
+      "length_meters": 1200,
+      "unlock_requirement": null,
+      "rewards": {
+        "1st": { "coins": 500, "exp": 50 },
+        "2nd": { "coins": 300, "exp": 30 },
+        "3rd": { "coins": 200, "exp": 20 }
+      }
+    },
+    {
+      "track_id": 2,
+      "name": "해변 도로",
+      "theme": "beach",
+      "difficulty": "easy",
+      "laps": 3,
+      "length_meters": 1500,
+      "unlock_requirement": { "player_level": 5 },
+      "rewards": {
+        "1st": { "coins": 600, "exp": 60 },
+        "2nd": { "coins": 400, "exp": 40 },
+        "3rd": { "coins": 250, "exp": 25 }
+      }
+    },
+    {
+      "track_id": 3,
+      "name": "산악 코스",
+      "theme": "mountain",
+      "difficulty": "medium",
+      "laps": 4,
+      "length_meters": 2000,
+      "unlock_requirement": { "player_level": 10 },
+      "hazards": ["falling_rocks", "sharp_turns"],
+      "rewards": {
+        "1st": { "coins": 1000, "exp": 100, "diamonds": 10 },
+        "2nd": { "coins": 600, "exp": 60 },
+        "3rd": { "coins": 400, "exp": 40 }
+      }
+    },
+    {
+      "track_id": 4,
+      "name": "사막 레이스",
+      "theme": "desert",
+      "difficulty": "medium",
+      "laps": 5,
+      "length_meters": 2500,
+      "unlock_requirement": { "player_level": 15 },
+      "hazards": ["sandstorms", "rough_terrain"],
+      "rewards": {
+        "1st": { "coins": 1500, "exp": 150, "diamonds": 20 },
+        "2nd": { "coins": 900, "exp": 90 },
+        "3rd": { "coins": 600, "exp": 60 }
+      }
+    },
+    {
+      "track_id": 5,
+      "name": "정글 트레일",
+      "theme": "jungle",
+      "difficulty": "hard",
+      "laps": 5,
+      "length_meters": 3000,
+      "unlock_requirement": { "player_level": 20 },
+      "hazards": ["wild_animals", "muddy_paths", "narrow_bridges"],
+      "rewards": {
+        "1st": { "coins": 2500, "exp": 250, "diamonds": 50, "card_pack": "premium" },
+        "2nd": { "coins": 1500, "exp": 150, "diamonds": 20 },
+        "3rd": { "coins": 1000, "exp": 100 }
+      }
+    },
+    {
+      "track_id": 6,
+      "name": "스노우 서킷",
+      "theme": "snow",
+      "difficulty": "hard",
+      "laps": 6,
+      "length_meters": 3500,
+      "unlock_requirement": { "player_level": 25 },
+      "hazards": ["ice_patches", "blizzards", "avalanches"],
+      "rewards": {
+        "1st": { "coins": 3000, "exp": 300, "diamonds": 100, "exclusive_vehicle_part": true },
+        "2nd": { "coins": 2000, "exp": 200, "diamonds": 50 },
+        "3rd": { "coins": 1500, "exp": 150, "diamonds": 20 }
+      }
+    },
+    {
+      "track_id": 7,
+      "name": "화산 레이스",
+      "theme": "volcano",
+      "difficulty": "extreme",
+      "laps": 7,
+      "length_meters": 4000,
+      "unlock_requirement": { "player_level": 30 },
+      "hazards": ["lava_flows", "eruptions", "extreme_heat"],
+      "rewards": {
+        "1st": { "coins": 5000, "exp": 500, "diamonds": 200, "legendary_card": true },
+        "2nd": { "coins": 3000, "exp": 300, "diamonds": 100 },
+        "3rd": { "coins": 2000, "exp": 200, "diamonds": 50 }
+      }
+    },
+    {
+      "track_id": 8,
+      "name": "챔피언십 그랑프리",
+      "theme": "championship",
+      "difficulty": "extreme",
+      "laps": 10,
+      "length_meters": 5000,
+      "unlock_requirement": { "player_level": 40, "all_tracks_completed": true },
+      "hazards": ["all_hazards"],
+      "rewards": {
+        "1st": { "coins": 10000, "exp": 1000, "diamonds": 500, "championship_vehicle": true, "title": "champion" },
+        "2nd": { "coins": 6000, "exp": 600, "diamonds": 300 },
+        "3rd": { "coins": 4000, "exp": 400, "diamonds": 200 }
+      }
+    }
+  ],
+  "ability_cards": [
+    {
+      "id": "nitro_boost",
+      "name": "니트로 부스트",
+      "rarity": "common",
+      "effect": "speed_+50%",
+      "duration_seconds": 3,
+      "cooldown_seconds": 15
+    },
+    {
+      "id": "shield",
+      "name": "보호막",
+      "rarity": "common",
+      "effect": "immune_to_obstacles",
+      "duration_seconds": 5,
+      "cooldown_seconds": 20
+    },
+    {
+      "id": "oil_slick",
+      "name": "오일 슬릭",
+      "rarity": "rare",
+      "effect": "slow_opponents_behind",
+      "duration_seconds": 4,
+      "cooldown_seconds": 25
+    },
+    {
+      "id": "perfect_drift",
+      "name": "완벽한 드리프트",
+      "rarity": "rare",
+      "effect": "handling_+100%_corners",
+      "duration_seconds": 8,
+      "cooldown_seconds": 30
+    },
+    {
+      "id": "teleport",
+      "name": "순간이동",
+      "rarity": "epic",
+      "effect": "jump_forward_50m",
+      "duration_seconds": 1,
+      "cooldown_seconds": 45
+    },
+    {
+      "id": "time_slow",
+      "name": "시간 감속",
+      "rarity": "epic",
+      "effect": "slow_all_opponents_50%",
+      "duration_seconds": 5,
+      "cooldown_seconds": 60
+    },
+    {
+      "id": "ultimate_speed",
+      "name": "궁극의 속도",
+      "rarity": "legendary",
+      "effect": "speed_+200%_invincible",
+      "duration_seconds": 5,
+      "cooldown_seconds": 90
+    }
+  ],
+  "leagues": {
+    "bronze": {
+      "rank_range": [1, 1000],
+      "season_reward": { "coins": 10000, "diamonds": 100 }
+    },
+    "silver": {
+      "rank_range": [1, 500],
+      "season_reward": { "coins": 20000, "diamonds": 300, "card_pack": "premium" }
+    },
+    "gold": {
+      "rank_range": [1, 200],
+      "season_reward": { "coins": 50000, "diamonds": 800, "exclusive_skin": true }
+    },
+    "platinum": {
+      "rank_range": [1, 50],
+      "season_reward": { "coins": 100000, "diamonds": 2000, "exclusive_vehicle": true }
+    },
+    "legend": {
+      "rank_range": [1, 10],
+      "season_reward": { "coins": 500000, "diamonds": 10000, "legendary_vehicle": true, "title": "legend" }
+    }
+  }
+}

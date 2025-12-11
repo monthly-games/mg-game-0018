@@ -1,0 +1,167 @@
+{
+  "version": "0.1.0",
+  "currencies": {
+    "coins": {
+      "display_name": "코인",
+      "icon": "assets/icons/coin.png",
+      "initial_amount": 10000,
+      "sources": {
+        "race_complete": {
+          "1st_place": 500,
+          "2nd_place": 300,
+          "3rd_place": 200,
+          "participation": 50
+        },
+        "idle_income": {
+          "base_per_hour": 200,
+          "max_accumulation_hours": 12
+        },
+        "daily_login": {
+          "day_1": 500,
+          "day_2": 600,
+          "day_3": 700,
+          "day_7": 3000
+        }
+      },
+      "sinks": {
+        "vehicle_upgrade": {
+          "speed": { "base_cost": 200, "level_multiplier": 1.5 },
+          "acceleration": { "base_cost": 200, "level_multiplier": 1.5 },
+          "handling": { "base_cost": 150, "level_multiplier": 1.5 },
+          "durability": { "base_cost": 150, "level_multiplier": 1.5 }
+        },
+        "card_purchase": {
+          "common": 500,
+          "rare": 2000,
+          "epic": 10000
+        },
+        "parts_shop": {
+          "wheels": 5000,
+          "exhaust": 8000,
+          "engine": 15000
+        }
+      }
+    },
+    "diamonds": {
+      "display_name": "다이아",
+      "icon": "assets/icons/diamond.png",
+      "initial_amount": 200,
+      "iap_packages": [
+        { "diamonds": 100, "price_usd": 0.99 },
+        { "diamonds": 550, "price_usd": 4.99 },
+        { "diamonds": 1200, "price_usd": 9.99 },
+        { "diamonds": 3000, "price_usd": 19.99 },
+        { "diamonds": 8000, "price_usd": 49.99 }
+      ],
+      "uses": {
+        "premium_vehicle": 2000,
+        "card_pack_premium": 500,
+        "instant_upgrade": "dynamic",
+        "fuel_refill": 100,
+        "season_pass": 1000
+      }
+    },
+    "fuel": {
+      "display_name": "연료",
+      "icon": "assets/icons/fuel.png",
+      "max_amount": 20,
+      "regen_minutes": 10,
+      "race_cost": {
+        "normal": 1,
+        "tournament": 3,
+        "championship": 5
+      }
+    }
+  },
+  "vehicles": {
+    "starter": {
+      "id": "basic_racer",
+      "name": "베이직 레이서",
+      "unlock_cost": 0,
+      "base_stats": {
+        "speed": 100,
+        "acceleration": 80,
+        "handling": 70,
+        "durability": 90
+      }
+    },
+    "normal": [
+      {
+        "id": "speed_demon",
+        "name": "스피드 데몬",
+        "unlock_cost": { "coins": 50000 },
+        "base_stats": {
+          "speed": 150,
+          "acceleration": 100,
+          "handling": 60,
+          "durability": 80
+        }
+      },
+      {
+        "id": "drift_master",
+        "name": "드리프트 마스터",
+        "unlock_cost": { "coins": 50000 },
+        "base_stats": {
+          "speed": 120,
+          "acceleration": 90,
+          "handling": 150,
+          "durability": 90
+        }
+      }
+    ],
+    "premium": [
+      {
+        "id": "lightning_bolt",
+        "name": "라이트닝 볼트",
+        "unlock_cost": { "diamonds": 2000 },
+        "base_stats": {
+          "speed": 200,
+          "acceleration": 150,
+          "handling": 120,
+          "durability": 100
+        },
+        "special_ability": "lightning_boost"
+      }
+    ]
+  },
+  "card_packs": {
+    "basic_pack": {
+      "cost": { "currency": "coins", "amount": 5000 },
+      "cards": 3,
+      "rates": {
+        "epic": 0.05,
+        "rare": 0.25,
+        "common": 0.70
+      }
+    },
+    "premium_pack": {
+      "cost": { "currency": "diamonds", "amount": 500 },
+      "cards": 5,
+      "rates": {
+        "legendary": 0.03,
+        "epic": 0.15,
+        "rare": 0.40,
+        "common": 0.42
+      },
+      "guaranteed": {
+        "rare_or_higher": 1
+      }
+    }
+  },
+  "season_pass": {
+    "cost": { "currency": "diamonds", "amount": 1000 },
+    "duration_days": 30,
+    "free_rewards": {
+      "coins": 50000,
+      "cards": 10,
+      "customization_items": 3
+    },
+    "premium_rewards": {
+      "coins": 200000,
+      "diamonds": 2000,
+      "exclusive_vehicle": true,
+      "cards": 30,
+      "customization_items": 15
+    }
+  }
+}

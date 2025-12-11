@@ -1,0 +1,103 @@
+{
+  "meta": {
+    "game_id": "game_0018",
+    "code_name": "MG-0018",
+    "title_kr": "카툰 레이싱 RPG",
+    "title_en": "Cartoon Racing RPG",
+    "version": "0.1.0",
+    "last_updated": "2025-07-01"
+  },
+  "overview": {
+    "genre_tags": ["racing", "card", "idle"],
+    "target_audience": {
+      "age": "15-35",
+      "region": ["KR", "SEA", "Global"],
+      "play_style": "casual_action"
+    },
+    "core_loop": "능력 카드를 장착하고 레이싱으로 경쟁하며 방치 보상으로 성장한다",
+    "unique_selling_point": "카툰 스타일 레이싱과 RPG 성장 시스템의 결합",
+    "year2_role": "비전통적 장르 믹스 실험"
+  },
+  "gameplay": {
+    "core_mechanics": [
+      {
+        "name": "레이싱",
+        "description": "직관적인 조작으로 다양한 트랙에서 경주"
+      },
+      {
+        "name": "능력 카드",
+        "description": "레이스 중 사용할 특수 능력 카드 장착"
+      },
+      {
+        "name": "차량 성장",
+        "description": "방치 보상으로 차량 스탯 강화"
+      },
+      {
+        "name": "멀티플레이어",
+        "description": "실시간/비동기 PVP 레이싱"
+      }
+    ],
+    "progression": {
+      "type": "track_unlock",
+      "description": "새로운 트랙과 차량을 해금하며 진행"
+    },
+    "session_length": "3-5분"
+  },
+  "economy": {
+    "currencies": [
+      {
+        "name": "코인",
+        "type": "soft",
+        "sources": ["레이스 완료", "방치 수익", "일일 보상"],
+        "sinks": ["차량 업그레이드", "카드 구매", "파츠 구입"]
+      },
+      {
+        "name": "다이아",
+        "type": "hard",
+        "sources": ["인앱 구매", "리그 보상", "업적"],
+        "sinks": ["프리미엄 차량", "카드 팩", "즉시 업그레이드"]
+      },
+      {
+        "name": "연료",
+        "type": "energy",
+        "max": 20,
+        "regen_rate": "1/10분",
+        "sources": ["시간 회복", "광고", "다이아 구매"],
+        "sinks": ["레이스 참가"]
+      }
+    ],
+    "monetization": {
+      "model": "F2P + IAP",
+      "iap_items": ["다이아 패키지", "프리미엄 차량 번들", "시즌 패스"],
+      "ad_placements": ["보상형 광고 (연료, 보상 2배)", "인터스티셜 (레이스 사이)"]
+    }
+  },
+  "card_system": {
+    "card_types": [
+      "속도 부스트",
+      "방어막",
+      "방해 공격",
+      "코너링 강화",
+      "특수 능력"
+    ],
+    "card_slots": 3,
+    "card_upgrade": {
+      "max_level": 10,
+      "effects": ["효과 강화", "쿨타임 감소", "지속시간 증가"]
+    }
+  },
+  "vehicle_system": {
+    "stats": ["최고속도", "가속력", "핸들링", "내구도"],
+    "upgrade_system": {
+      "max_level_per_stat": 50,
+      "level_benefits": "+2%_per_level"
+    },
+    "customization": ["색상", "스킨", "휠", "배기구"]
+  },
+  "technical": {
+    "platform": ["Android", "iOS"],
+    "engine": "Flutter + Flame",
+    "backend": "Firebase + Cloud Functions",
+    "analytics": "GA4 + BigQuery"
+  }
+}

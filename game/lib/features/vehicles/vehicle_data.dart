@@ -120,6 +120,51 @@ class Vehicles {
     unlockLevel: 5,
   );
 
+  // Vehicle 7: Racer (League 3 - High speed, low handling)
+  static const racer = Vehicle(
+    id: 'racer',
+    name: 'Lightning Bolt',
+    nameKo: '라이트닝 볼트',
+    baseStats: VehicleStats(
+      speed: 10,
+      acceleration: 7,
+      handling: 4,
+      boost: 8,
+    ),
+    unlockCost: 12000,
+    unlockLevel: 3,
+  );
+
+  // Vehicle 8: Technical (League 4 - Balanced high-tier)
+  static const technical = Vehicle(
+    id: 'technical',
+    name: 'Tech Master',
+    nameKo: '테크 마스터',
+    baseStats: VehicleStats(
+      speed: 8,
+      acceleration: 8,
+      handling: 8,
+      boost: 7,
+    ),
+    unlockCost: 18000,
+    unlockLevel: 4,
+  );
+
+  // Vehicle 9: Ultimate (League 5 - Best overall)
+  static const ultimate = Vehicle(
+    id: 'ultimate',
+    name: 'Phantom X',
+    nameKo: '팬텀 X',
+    baseStats: VehicleStats(
+      speed: 9,
+      acceleration: 9,
+      handling: 9,
+      boost: 10,
+    ),
+    unlockCost: 30000,
+    unlockLevel: 5,
+  );
+
   static const List<Vehicle> all = [
     starter,
     speedster,
@@ -127,6 +172,9 @@ class Vehicles {
     tank,
     balanced,
     legend,
+    racer,
+    technical,
+    ultimate,
   ];
 
   static Vehicle? getById(String id) {

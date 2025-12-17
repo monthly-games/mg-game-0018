@@ -119,6 +119,39 @@ class AbilityCards {
     basePower: 0.5, // Heal percentage
   );
 
+  static const teleport = AbilityCard(
+    id: 'teleport',
+    name: 'Teleport',
+    nameKo: '텔레포트',
+    description: '짧은 거리를 순간이동',
+    type: CardType.jump,
+    rarity: CardRarity.epic,
+    baseCooldown: 15,
+    basePower: 200.0, // Distance in pixels
+  );
+
+  static const freeze = AbilityCard(
+    id: 'freeze',
+    name: 'Ice Blast',
+    nameKo: '아이스 블라스트',
+    description: '모든 상대를 3초간 빙결',
+    type: CardType.slowdown,
+    rarity: CardRarity.legendary,
+    baseCooldown: 30,
+    basePower: 0.0, // Complete stop
+  );
+
+  static const ghost = AbilityCard(
+    id: 'ghost',
+    name: 'Ghost Mode',
+    nameKo: '고스트 모드',
+    description: '10초간 벽 통과 가능',
+    type: CardType.shield,
+    rarity: CardRarity.legendary,
+    baseCooldown: 35,
+    basePower: 10.0, // Duration
+  );
+
   static const List<AbilityCard> all = [
     boost,
     shield,
@@ -127,6 +160,9 @@ class AbilityCards {
     magnet,
     jump,
     repair,
+    teleport,
+    freeze,
+    ghost,
   ];
 
   static AbilityCard? getById(String id) {

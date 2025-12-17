@@ -316,6 +316,89 @@ class Tracks {
     backgroundColor: Color(0xFF6600FF),
   );
 
+  // Track 9: Cyberpunk City (League 4)
+  static final cyberpunk1 = Track(
+    id: 'cyberpunk_1',
+    nameKo: '사이버펑크 메트로폴리스',
+    type: TrackType.city,
+    requiredLeague: 4,
+    unlockCost: 8000,
+    size: Vector2(1400, 900),
+    centerLine: [
+      Vector2(200, 450), Vector2(400, 300), Vector2(700, 200),
+      Vector2(1000, 250), Vector2(1200, 450), Vector2(1100, 650),
+      Vector2(800, 700), Vector2(500, 650), Vector2(200, 450),
+    ],
+    trackWidth: 140,
+    checkpoints: [
+      Checkpoint(position: Vector2(550, 250), width: 100, height: 20, index: 0),
+      Checkpoint(position: Vector2(1150, 450), width: 20, height: 100, index: 1),
+      Checkpoint(position: Vector2(800, 700), width: 100, height: 20, index: 2),
+      Checkpoint(position: Vector2(350, 550), width: 20, height: 100, index: 3),
+    ],
+    startPosition: Vector2(200, 450),
+    startAngle: 0,
+    roadColor: Color(0xFF00FFFF), // Cyan
+    borderColor: Color(0xFFFF00FF), // Magenta
+    backgroundColor: Color(0xFF1A0033), // Dark purple
+  );
+
+  // Track 10: Ancient Ruins (League 4)
+  static final ruins1 = Track(
+    id: 'ruins_1',
+    nameKo: '고대 유적 트랙',
+    type: TrackType.desert,
+    requiredLeague: 4,
+    unlockCost: 8000,
+    size: Vector2(1500, 1000),
+    centerLine: [
+      Vector2(300, 500), Vector2(600, 300), Vector2(900, 400),
+      Vector2(1200, 300), Vector2(1300, 600), Vector2(1000, 800),
+      Vector2(700, 700), Vector2(400, 700), Vector2(300, 500),
+    ],
+    trackWidth: 130,
+    checkpoints: [
+      Checkpoint(position: Vector2(750, 350), width: 100, height: 20, index: 0),
+      Checkpoint(position: Vector2(1250, 450), width: 20, height: 100, index: 1),
+      Checkpoint(position: Vector2(850, 750), width: 100, height: 20, index: 2),
+      Checkpoint(position: Vector2(350, 600), width: 20, height: 100, index: 3),
+    ],
+    startPosition: Vector2(300, 500),
+    startAngle: 0,
+    roadColor: Color(0xFFDDCC99), // Sandy
+    borderColor: Color(0xFF8B7355), // Brown
+    backgroundColor: Color(0xFFE6D5B8), // Light sand
+  );
+
+  // Track 11: Crystal Cavern (League 5)
+  static final crystal1 = Track(
+    id: 'crystal_1',
+    nameKo: '크리스탈 동굴',
+    type: TrackType.mountain,
+    requiredLeague: 5,
+    unlockCost: 12000,
+    size: Vector2(1600, 1100),
+    centerLine: [
+      Vector2(300, 550), Vector2(500, 300), Vector2(800, 250),
+      Vector2(1100, 350), Vector2(1300, 550), Vector2(1200, 800),
+      Vector2(900, 850), Vector2(600, 800), Vector2(400, 650),
+      Vector2(300, 550),
+    ],
+    trackWidth: 150,
+    checkpoints: [
+      Checkpoint(position: Vector2(650, 275), width: 100, height: 20, index: 0),
+      Checkpoint(position: Vector2(1200, 450), width: 20, height: 100, index: 1),
+      Checkpoint(position: Vector2(1050, 825), width: 100, height: 20, index: 2),
+      Checkpoint(position: Vector2(500, 725), width: 20, height: 100, index: 3),
+      Checkpoint(position: Vector2(350, 600), width: 20, height: 100, index: 4),
+    ],
+    startPosition: Vector2(300, 550),
+    startAngle: 0,
+    roadColor: Color(0xFFAACCFF), // Light blue
+    borderColor: Color(0xFF00FFFF), // Cyan
+    backgroundColor: Color(0xFF222244), // Dark blue
+  );
+
   static final List<Track> all = [
     city1,
     desert1,
@@ -325,6 +408,9 @@ class Tracks {
     space1,
     underwater1,
     rainbow1,
+    cyberpunk1,
+    ruins1,
+    crystal1,
   ];
 
   static Track? getById(String id) {

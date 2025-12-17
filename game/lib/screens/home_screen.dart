@@ -12,8 +12,119 @@ import 'deck_screen.dart';
 import 'shop_screen.dart';
 import 'league_screen.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  @override
+  void initState() {
+    super.initState();
+    // Show tutorial on first launch
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _checkAndShowTutorial();
+    });
+  }
+
+  Future<void> _checkAndShowTutorial() async {
+    final saveManager = Provider.of<SaveManager>(context, listen: false);
+    final hasSave = await saveManager.hasSaveData();
+
+    // Show tutorial only for new players
+    if (!hasSave && mounted) {
+      _showTutorial();
+    }
+  }
+
+  void _showTutorial() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => AlertDialog(
+        title: Row(
+          children: [
+            Icon(Icons.directions_car, color: AppColors.primary, size: 32),
+            const SizedBox(width: 12),
+            const Expanded(child: Text('환영합니다!')),
+          ],
+        ),
+        content: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('카툰 레이싱 RPG', style: AppTextStyles.header2),
+              const SizedBox(height: 16),
+              _buildTutorialStep('🏎️', '차량 선택', '차고에서 차량을 해금하고 강화'),
+              const SizedBox(height: 12),
+              _buildTutorialStep('🃏', '카드 덱', '능력 카드로 전략적인 덱 구성'),
+              const SizedBox(height: 12),
+              _buildTutorialStep('🏁', '레이스', '연료로 레이스 참가 및 보상 획득'),
+              const SizedBox(height: 12),
+              _buildTutorialStep('🏪', '상점', '코인으로 아이템 구매'),
+              const SizedBox(height: 12),
+              _buildTutorialStep('🏆', '리그', '승급으로 새 트랙과 차량 해금'),
+              const SizedBox(height: 16),
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.blue.withOpacity(0.2),
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: Colors.blue),
+                ),
+                child: Row(
+                  children: [
+                    const Icon(Icons.info, color: Colors.blue, size: 20),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        '연료는 1분에 1씩 자동 회복됩니다!',
+                        style: AppTextStyles.caption.copyWith(color: Colors.blue),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          ElevatedButton.icon(
+            onPressed: () => Navigator.pop(context),
+            icon: const Icon(Icons.check),
+            label: const Text('시작하기!'),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.primary,
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTutorialStep(String emoji, String title, String description) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(emoji, style: const TextStyle(fontSize: 24)),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(title, style: AppTextStyles.body.copyWith(fontWeight: FontWeight.bold)),
+              const SizedBox(height: 4),
+              Text(description, style: AppTextStyles.caption),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
 
   @override
   Widget build(BuildContext context) {

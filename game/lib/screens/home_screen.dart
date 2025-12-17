@@ -6,6 +6,8 @@ import 'package:mg_common_game/core/ui/theme/app_text_styles.dart';
 import '../features/player/player_manager.dart';
 import '../game/tracks/track_data.dart';
 import 'race_screen.dart';
+import 'garage_screen.dart';
+import 'deck_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -99,9 +101,9 @@ class HomeScreen extends StatelessWidget {
                       icon: Icons.garage,
                       label: '차고',
                       onPressed: () {
-                        // TODO: Navigate to garage screen
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('차고 화면 구현 예정')),
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const GarageScreen()),
                         );
                       },
                     ),
@@ -110,9 +112,9 @@ class HomeScreen extends StatelessWidget {
                       icon: Icons.style,
                       label: '카드 덱',
                       onPressed: () {
-                        // TODO: Navigate to deck screen
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('카드 덱 화면 구현 예정')),
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const DeckScreen()),
                         );
                       },
                     ),

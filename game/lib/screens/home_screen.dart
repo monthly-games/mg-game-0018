@@ -4,6 +4,8 @@ import 'package:mg_common_game/core/ui/theme/app_colors.dart';
 import 'package:mg_common_game/core/ui/theme/app_text_styles.dart';
 
 import '../features/player/player_manager.dart';
+import '../game/tracks/track_data.dart';
+import 'race_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -68,9 +70,76 @@ class HomeScreen extends StatelessWidget {
 
                 const SizedBox(height: 32),
 
-                // Placeholder buttons
-                Text('레이싱 게임 코어 메커니즘 구현 필요', style: AppTextStyles.body),
-                Text('차량 물리, 트랙, AI 경쟁자 등', style: AppTextStyles.caption),
+                // Race button
+                ElevatedButton.icon(
+                  onPressed: player.fuel >= 10
+                      ? () => _startRace(context, player)
+                      : null,
+                  icon: const Icon(Icons.play_arrow, size: 32),
+                  label: Text(
+                    '레이스 시작 (연료 -10)',
+                    style: AppTextStyles.body.copyWith(fontSize: 18),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.primary,
+                    padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                  ),
+                ),
+
+                const SizedBox(height: 16),
+
+                // Other menu buttons
+                Wrap(
+                  spacing: 16,
+                  runSpacing: 16,
+                  alignment: WrapAlignment.center,
+                  children: [
+                    _buildMenuButton(
+                      context,
+                      icon: Icons.garage,
+                      label: '차고',
+                      onPressed: () {
+                        // TODO: Navigate to garage screen
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('차고 화면 구현 예정')),
+                        );
+                      },
+                    ),
+                    _buildMenuButton(
+                      context,
+                      icon: Icons.style,
+                      label: '카드 덱',
+                      onPressed: () {
+                        // TODO: Navigate to deck screen
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('카드 덱 화면 구현 예정')),
+                        );
+                      },
+                    ),
+                    _buildMenuButton(
+                      context,
+                      icon: Icons.store,
+                      label: '상점',
+                      onPressed: () {
+                        // TODO: Navigate to shop screen
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('상점 화면 구현 예정')),
+                        );
+                      },
+                    ),
+                    _buildMenuButton(
+                      context,
+                      icon: Icons.emoji_events,
+                      label: '리그',
+                      onPressed: () {
+                        // TODO: Navigate to league screen
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('리그 화면 구현 예정')),
+                        );
+                      },
+                    ),
+                  ],
+                ),
               ],
             ),
           );
@@ -93,5 +162,67 @@ class HomeScreen extends StatelessWidget {
         Text('$amount', style: TextStyle(color: color, fontSize: 18, fontWeight: FontWeight.bold)),
       ],
     );
+  }
+
+  Widget _buildMenuButton(
+    BuildContext context, {
+    required IconData icon,
+    required String label,
+    required VoidCallback onPressed,
+  }) {
+    return ElevatedButton.icon(
+      onPressed: onPressed,
+      icon: Icon(icon),
+      label: Text(label),
+      style: ElevatedButton.styleFrom(
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+      ),
+    );
+  }
+
+  void _startRace(BuildContext context, PlayerManager player) {
+    // Spend fuel
+    if (!player.spendFuel(10)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('연료가 부족합니다!')),
+      );
+      return;
+    }
+
+    // Get selected vehicle
+    final vehicle = player.selectedVehicle;
+    if (vehicle == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('차량을 선택해주세요!')),
+      );
+      return;
+    }
+
+    // Start race on first available track (city1)
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => RaceScreen(
+          track: Tracks.city1,
+          vehicle: vehicle,
+          equippedCardIds: player.equippedCardIds,
+        ),
+      ),
+    ).then((result) {
+      // Handle race results
+      if (result != null && result is Map<String, dynamic>) {
+        final position = result['position'] as int;
+        final rewards = result['rewards'] as int;
+
+        player.addCoins(rewards);
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('레이스 완료! ${position}위 - 보상: $rewards 코인'),
+            duration: const Duration(seconds: 3),
+          ),
+        );
+      }
+    });
   }
 }

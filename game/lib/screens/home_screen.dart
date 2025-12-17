@@ -4,6 +4,7 @@ import 'package:mg_common_game/core/ui/theme/app_colors.dart';
 import 'package:mg_common_game/core/ui/theme/app_text_styles.dart';
 
 import '../features/player/player_manager.dart';
+import '../features/save/save_manager.dart';
 import '../game/tracks/track_data.dart';
 import 'race_screen.dart';
 import 'garage_screen.dart';
@@ -20,6 +21,24 @@ class HomeScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Cartoon Racing RPG'),
         backgroundColor: AppColors.primary,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.save),
+            onPressed: () async {
+              final saveManager = Provider.of<SaveManager>(context, listen: false);
+              final success = await saveManager.saveGame();
+              if (context.mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(success ? '게임이 저장되었습니다' : '저장 실패'),
+                    duration: const Duration(seconds: 1),
+                  ),
+                );
+              }
+            },
+            tooltip: '게임 저장',
+          ),
+        ],
       ),
       body: Consumer<PlayerManager>(
         builder: (context, player, child) {
@@ -216,7 +235,7 @@ class HomeScreen extends StatelessWidget {
           equippedCardIds: player.equippedCardIds,
         ),
       ),
-    ).then((result) {
+    ).then((result) async {
       // Handle race results
       if (result != null && result is Map<String, dynamic>) {
         final position = result['position'] as int;
@@ -224,12 +243,18 @@ class HomeScreen extends StatelessWidget {
 
         player.addCoins(rewards);
 
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('레이스 완료! ${position}위 - 보상: $rewards 코인'),
-            duration: const Duration(seconds: 3),
-          ),
-        );
+        // Auto-save after race
+        final saveManager = Provider.of<SaveManager>(context, listen: false);
+        await saveManager.saveGame();
+
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('레이스 완료! ${position}위 - 보상: $rewards 코인'),
+              duration: const Duration(seconds: 3),
+            ),
+          );
+        }
       }
     });
   }

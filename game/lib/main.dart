@@ -5,6 +5,7 @@ import 'package:mg_common_game/core/audio/audio_manager.dart';
 import 'package:mg_common_game/core/ui/theme/app_colors.dart';
 
 import 'features/player/player_manager.dart';
+import 'features/save/save_manager.dart';
 import 'screens/home_screen.dart';
 
 void main() async {
@@ -21,14 +22,73 @@ void _setupDI() {
   }
 }
 
-class RacingApp extends StatelessWidget {
+class RacingApp extends StatefulWidget {
   const RacingApp({super.key});
 
   @override
+  State<RacingApp> createState() => _RacingAppState();
+}
+
+class _RacingAppState extends State<RacingApp> with WidgetsBindingObserver {
+  late PlayerManager _playerManager;
+  late SaveManager _saveManager;
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    _initializeApp();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    // Auto-save when app goes to background
+    if (state == AppLifecycleState.paused) {
+      _saveManager.saveGame();
+    }
+  }
+
+  Future<void> _initializeApp() async {
+    _playerManager = PlayerManager();
+    _saveManager = SaveManager(playerManager: _playerManager);
+
+    // Try to load save data
+    final loaded = await _saveManager.loadGame();
+    if (loaded) {
+      debugPrint('Save data loaded successfully');
+    } else {
+      debugPrint('Starting new game');
+    }
+
+    setState(() {
+      _isLoading = false;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
+    if (_isLoading) {
+      return MaterialApp(
+        home: Scaffold(
+          backgroundColor: AppColors.background,
+          body: const Center(
+            child: CircularProgressIndicator(),
+          ),
+        ),
+      );
+    }
+
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => PlayerManager()),
+        ChangeNotifierProvider.value(value: _playerManager),
+        ChangeNotifierProvider.value(value: _saveManager),
       ],
       child: MaterialApp(
         title: 'Cartoon Racing RPG',

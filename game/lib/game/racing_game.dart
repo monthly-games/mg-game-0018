@@ -21,6 +21,7 @@ enum RaceState {
 class RacingGame extends FlameGame with KeyboardEvents, TapCallbacks {
   final Track track;
   final Vehicle playerVehicle;
+  final VehicleStats playerVehicleStats;
   final List<String> equippedCardIds;
 
   // Components
@@ -35,6 +36,7 @@ class RacingGame extends FlameGame with KeyboardEvents, TapCallbacks {
   double countdownTimer = 3.0;
   double raceTime = 0;
   int totalLaps = 3;
+  int playerFinalPosition = 0; // Set when race finishes
 
   // Player controls
   final Map<LogicalKeyboardKey, bool> _keysPressed = {};
@@ -48,6 +50,7 @@ class RacingGame extends FlameGame with KeyboardEvents, TapCallbacks {
   RacingGame({
     required this.track,
     required this.playerVehicle,
+    required this.playerVehicleStats,
     required this.equippedCardIds,
   });
 
@@ -68,11 +71,12 @@ class RacingGame extends FlameGame with KeyboardEvents, TapCallbacks {
     trackComponent = TrackComponent(track: track);
     add(trackComponent);
 
-    // Create player vehicle
+    // Create player vehicle with upgraded stats
     playerVehicleComponent = VehicleComponent(
       vehicle: playerVehicle,
       isPlayer: true,
       position: track.startPosition.clone(),
+      upgradeStats: playerVehicleStats,
     );
     playerVehicleComponent.angle = track.startAngle;
     add(playerVehicleComponent);
@@ -229,7 +233,8 @@ class RacingGame extends FlameGame with KeyboardEvents, TapCallbacks {
     // Calculate final rankings
     final rankings = _calculateRankings();
 
-    // TODO: Show results overlay with rankings, time, rewards
+    // Store race results for UI
+    playerFinalPosition = rankings.indexOf(playerVehicleComponent) + 1;
   }
 
   List<VehicleComponent> _calculateRankings() {

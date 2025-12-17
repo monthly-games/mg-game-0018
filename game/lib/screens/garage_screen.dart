@@ -133,19 +133,23 @@ class GarageScreen extends StatelessWidget {
 
             // Stats
             if (isUnlocked) ...[
+              // Upgrade level indicator
+              _buildUpgradeLevel(player, vehicle),
+              const SizedBox(height: 12),
+
               Row(
                 children: [
-                  Expanded(child: _buildStatBar('속도', vehicle.baseStats.speed, Colors.red)),
+                  Expanded(child: _buildStatBar('속도', player.getUpgradedStats(vehicle).speed, Colors.red, vehicle.baseStats.speed)),
                   const SizedBox(width: 8),
-                  Expanded(child: _buildStatBar('가속', vehicle.baseStats.acceleration, Colors.orange)),
+                  Expanded(child: _buildStatBar('가속', player.getUpgradedStats(vehicle).acceleration, Colors.orange, vehicle.baseStats.acceleration)),
                 ],
               ),
               const SizedBox(height: 8),
               Row(
                 children: [
-                  Expanded(child: _buildStatBar('핸들링', vehicle.baseStats.handling, Colors.blue)),
+                  Expanded(child: _buildStatBar('핸들링', player.getUpgradedStats(vehicle).handling, Colors.blue, vehicle.baseStats.handling)),
                   const SizedBox(width: 8),
-                  Expanded(child: _buildStatBar('부스트', vehicle.baseStats.boost, Colors.purple)),
+                  Expanded(child: _buildStatBar('부스트', player.getUpgradedStats(vehicle).boost, Colors.purple, vehicle.baseStats.boost)),
                 ],
               ),
               const SizedBox(height: 8),
@@ -153,7 +157,7 @@ class GarageScreen extends StatelessWidget {
                 children: [
                   Text('종합 평가: ', style: AppTextStyles.body),
                   Text(
-                    '${vehicle.baseStats.overall.toStringAsFixed(1)}/10',
+                    '${player.getUpgradedStats(vehicle).overall.toStringAsFixed(1)}/10',
                     style: AppTextStyles.body.copyWith(
                       color: Colors.amber,
                       fontWeight: FontWeight.bold,
@@ -214,6 +218,24 @@ class GarageScreen extends StatelessWidget {
                       child: const Text('선택하기'),
                     ),
                   ),
+                if (isUnlocked)
+                  const SizedBox(width: 8),
+                if (isUnlocked)
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: player.getVehicleUpgradeLevel(vehicle.id) < 5
+                          ? () => _upgradeVehicle(context, player, vehicle)
+                          : null,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.purple,
+                      ),
+                      child: Text(
+                        player.getVehicleUpgradeLevel(vehicle.id) >= 5
+                            ? '최대 강화'
+                            : '강화',
+                      ),
+                    ),
+                  ),
                 if (!isUnlocked)
                   Expanded(
                     child: ElevatedButton(
@@ -241,11 +263,27 @@ class GarageScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildStatBar(String label, double value, Color color) {
+  Widget _buildStatBar(String label, double value, Color color, [double? baseValue]) {
+    final isUpgraded = baseValue != null && value > baseValue;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: AppTextStyles.caption),
+        Row(
+          children: [
+            Text(label, style: AppTextStyles.caption),
+            if (isUpgraded) ...[
+              const SizedBox(width: 4),
+              Text(
+                '+${((value - baseValue!) / baseValue * 100).toStringAsFixed(0)}%',
+                style: AppTextStyles.caption.copyWith(
+                  color: Colors.green,
+                  fontSize: 10,
+                ),
+              ),
+            ],
+          ],
+        ),
         const SizedBox(height: 4),
         Stack(
           children: [
@@ -270,10 +308,125 @@ class GarageScreen extends StatelessWidget {
         ),
         const SizedBox(height: 2),
         Text(
-          '${value.toInt()}/10',
+          '${value.toStringAsFixed(1)}/10',
           style: AppTextStyles.caption.copyWith(fontSize: 10),
         ),
       ],
     );
+  }
+
+  Widget _buildUpgradeLevel(PlayerManager player, Vehicle vehicle) {
+    final upgradeLevel = player.getVehicleUpgradeLevel(vehicle.id);
+
+    return Row(
+      children: [
+        const Icon(Icons.trending_up, size: 16, color: Colors.purple),
+        const SizedBox(width: 4),
+        Text('강화 레벨:', style: AppTextStyles.caption),
+        const SizedBox(width: 8),
+        ...List.generate(5, (index) {
+          return Padding(
+            padding: const EdgeInsets.only(right: 4),
+            child: Icon(
+              index < upgradeLevel ? Icons.star : Icons.star_border,
+              size: 16,
+              color: index < upgradeLevel ? Colors.amber : Colors.grey,
+            ),
+          );
+        }),
+        const SizedBox(width: 8),
+        Text(
+          '$upgradeLevel/5',
+          style: AppTextStyles.caption.copyWith(
+            color: Colors.amber,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ],
+    );
+  }
+
+  void _upgradeVehicle(BuildContext context, PlayerManager player, Vehicle vehicle) {
+    final currentLevel = player.getVehicleUpgradeLevel(vehicle.id);
+    if (currentLevel >= 5) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('이미 최대 강화 레벨입니다!')),
+      );
+      return;
+    }
+
+    // Calculate upgrade cost (exponential)
+    final upgradeCost = _getUpgradeCost(currentLevel + 1);
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('차량 강화'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              vehicle.nameKo,
+              style: AppTextStyles.header2,
+            ),
+            const SizedBox(height: 16),
+            Text('강화 레벨: $currentLevel → ${currentLevel + 1}'),
+            const SizedBox(height: 8),
+            Text('모든 스탯 +10%'),
+            const SizedBox(height: 16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(Icons.monetization_on, color: Colors.yellow),
+                const SizedBox(width: 4),
+                Text(
+                  '$upgradeCost 코인',
+                  style: const TextStyle(
+                    color: Colors.yellow,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            if (player.coins < upgradeCost)
+              const Text(
+                '코인이 부족합니다!',
+                style: TextStyle(color: Colors.red),
+              ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('취소'),
+          ),
+          ElevatedButton(
+            onPressed: player.coins >= upgradeCost
+                ? () {
+                    if (player.upgradeVehicle(vehicle.id, upgradeCost)) {
+                      Navigator.pop(context);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('${vehicle.nameKo} 강화 완료! (레벨 ${currentLevel + 1})'),
+                        ),
+                      );
+                    }
+                  }
+                : null,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.purple,
+            ),
+            child: const Text('강화'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  int _getUpgradeCost(int targetLevel) {
+    // Exponential cost: 500, 1000, 2000, 4000, 8000
+    return 500 * (1 << (targetLevel - 1));
   }
 }

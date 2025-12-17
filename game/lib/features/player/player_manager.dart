@@ -17,6 +17,9 @@ class PlayerManager extends ChangeNotifier {
   final Set<String> _unlockedVehicles = {'starter'};
   final Set<String> _unlockedCards = {'boost', 'shield', 'missile', 'slowdown'};
 
+  // Vehicle upgrades (vehicleId -> upgrade level 0-5)
+  final Map<String, int> _vehicleUpgrades = {'starter': 0};
+
   // League progression
   int _currentLeague = 1; // 1-5
 
@@ -121,5 +124,37 @@ class PlayerManager extends ChangeNotifier {
       _currentLeague++;
       notifyListeners();
     }
+  }
+
+  /// Get vehicle upgrade level
+  int getVehicleUpgradeLevel(String vehicleId) {
+    return _vehicleUpgrades[vehicleId] ?? 0;
+  }
+
+  /// Upgrade vehicle (max level 5)
+  bool upgradeVehicle(String vehicleId, int cost) {
+    if (!_unlockedVehicles.contains(vehicleId)) return false;
+
+    final currentLevel = _vehicleUpgrades[vehicleId] ?? 0;
+    if (currentLevel >= 5) return false; // Max level
+
+    if (!spendCoins(cost)) return false;
+
+    _vehicleUpgrades[vehicleId] = currentLevel + 1;
+    notifyListeners();
+    return true;
+  }
+
+  /// Get upgraded stats for a vehicle
+  VehicleStats getUpgradedStats(Vehicle vehicle) {
+    final upgradeLevel = getVehicleUpgradeLevel(vehicle.id);
+    final upgradeBonus = upgradeLevel * 0.1; // +10% per level
+
+    return VehicleStats(
+      speed: vehicle.baseStats.speed * (1 + upgradeBonus),
+      acceleration: vehicle.baseStats.acceleration * (1 + upgradeBonus),
+      handling: vehicle.baseStats.handling * (1 + upgradeBonus),
+      boost: vehicle.baseStats.boost * (1 + upgradeBonus),
+    );
   }
 }

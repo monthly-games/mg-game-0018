@@ -8,6 +8,8 @@ import '../game/tracks/track_data.dart';
 import 'race_screen.dart';
 import 'garage_screen.dart';
 import 'deck_screen.dart';
+import 'shop_screen.dart';
+import 'league_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -123,9 +125,9 @@ class HomeScreen extends StatelessWidget {
                       icon: Icons.store,
                       label: '상점',
                       onPressed: () {
-                        // TODO: Navigate to shop screen
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('상점 화면 구현 예정')),
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const ShopScreen()),
                         );
                       },
                     ),
@@ -134,9 +136,9 @@ class HomeScreen extends StatelessWidget {
                       icon: Icons.emoji_events,
                       label: '리그',
                       onPressed: () {
-                        // TODO: Navigate to league screen
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('리그 화면 구현 예정')),
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const LeagueScreen()),
                         );
                       },
                     ),
@@ -200,6 +202,9 @@ class HomeScreen extends StatelessWidget {
       return;
     }
 
+    // Get upgraded stats
+    final upgradedStats = player.getUpgradedStats(vehicle);
+
     // Start race on first available track (city1)
     Navigator.push(
       context,
@@ -207,6 +212,7 @@ class HomeScreen extends StatelessWidget {
         builder: (context) => RaceScreen(
           track: Tracks.city1,
           vehicle: vehicle,
+          vehicleStats: upgradedStats,
           equippedCardIds: player.equippedCardIds,
         ),
       ),

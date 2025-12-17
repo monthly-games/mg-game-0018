@@ -38,16 +38,20 @@ class VehicleComponent extends PositionComponent {
     required this.vehicle,
     required this.isPlayer,
     Vector2? position,
+    VehicleStats? upgradeStats,
   }) : super(
     position: position ?? Vector2.zero(),
     size: Vector2(40, 60),
     anchor: Anchor.center,
   ) {
+    // Use upgraded stats if provided, otherwise base stats
+    final stats = upgradeStats ?? vehicle.baseStats;
+
     // Initialize physics from vehicle stats
-    maxSpeed = vehicle.baseStats.speed * 50; // Scale to pixels/sec
-    acceleration = vehicle.baseStats.acceleration * 20;
-    handling = vehicle.baseStats.handling * 0.05;
-    boostPower = vehicle.baseStats.boost;
+    maxSpeed = stats.speed * 50; // Scale to pixels/sec
+    acceleration = stats.acceleration * 20;
+    handling = stats.handling * 0.05;
+    boostPower = stats.boost;
   }
 
   @override

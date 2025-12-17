@@ -5,17 +5,21 @@ import '../game/racing_game.dart';
 import '../game/tracks/track_data.dart';
 import '../features/vehicles/vehicle_data.dart';
 import '../features/cards/card_data.dart';
+import 'race_results_screen.dart';
+import 'dart:async';
 
 /// Race screen with game and HUD overlay
 class RaceScreen extends StatefulWidget {
   final Track track;
   final Vehicle vehicle;
+  final VehicleStats vehicleStats;
   final List<String> equippedCardIds;
 
   const RaceScreen({
     super.key,
     required this.track,
     required this.vehicle,
+    required this.vehicleStats,
     required this.equippedCardIds,
   });
 
@@ -25,6 +29,8 @@ class RaceScreen extends StatefulWidget {
 
 class _RaceScreenState extends State<RaceScreen> {
   late RacingGame game;
+  Timer? _raceCheckTimer;
+  bool _resultsShown = false;
 
   @override
   void initState() {
@@ -32,8 +38,77 @@ class _RaceScreenState extends State<RaceScreen> {
     game = RacingGame(
       track: widget.track,
       playerVehicle: widget.vehicle,
+      playerVehicleStats: widget.vehicleStats,
       equippedCardIds: widget.equippedCardIds,
     );
+
+    // Check for race finish every 100ms
+    _raceCheckTimer = Timer.periodic(const Duration(milliseconds: 100), (_) {
+      if (game.raceState == RaceState.finished && !_resultsShown) {
+        _resultsShown = true;
+        _showResults();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _raceCheckTimer?.cancel();
+    super.dispose();
+  }
+
+  void _showResults() {
+    // Calculate rewards based on position
+    final position = game.playerFinalPosition;
+    final rewards = _calculateRewards(position);
+    final experience = _calculateExperience(position);
+
+    // Wait a moment before showing results
+    Future.delayed(const Duration(milliseconds: 500), () {
+      if (!mounted) return;
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => RaceResultsScreen(
+            position: position,
+            trackName: widget.track.nameKo,
+            raceTime: game.formattedRaceTime,
+            coinsEarned: rewards,
+            experienceEarned: experience,
+            isNewBestTime: false, // TODO: Track best times
+          ),
+        ),
+      );
+    });
+  }
+
+  int _calculateRewards(int position) {
+    // Rewards based on position
+    switch (position) {
+      case 1:
+        return 100;
+      case 2:
+        return 60;
+      case 3:
+        return 30;
+      default:
+        return 10;
+    }
+  }
+
+  int _calculateExperience(int position) {
+    // Experience based on position
+    switch (position) {
+      case 1:
+        return 50;
+      case 2:
+        return 35;
+      case 3:
+        return 20;
+      default:
+        return 10;
+    }
   }
 
   @override

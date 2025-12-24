@@ -85,8 +85,8 @@ class _LeagueScreenState extends State<LeagueScreen> {
   ];
 
   // Mock player stats (in real implementation, these would come from PlayerManager)
-  int _totalWins = 0;
-  int _totalRaces = 0;
+  final int _totalWins = 0;
+  final int _totalRaces = 0;
 
   @override
   Widget build(BuildContext context) {

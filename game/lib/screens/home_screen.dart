@@ -361,7 +361,7 @@ class _HomeScreenState extends State<HomeScreen> {
         if (context.mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('레이스 완료! ${position}위 - 보상: $rewards 코인'),
+              content: Text('레이스 완료! $position위 - 보상: $rewards 코인'),
               duration: const Duration(seconds: 3),
             ),
           );

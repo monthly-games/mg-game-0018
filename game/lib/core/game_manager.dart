@@ -2,7 +2,6 @@ import '../features/meta/economy_manager.dart';
 import '../features/meta/garage_manager.dart';
 import '../features/meta/card_manager.dart';
 import '../features/racing/data/vehicle_data.dart';
-import '../features/racing/data/vehicle_data.dart';
 import '../features/cards/data/card_data.dart';
 import 'save_manager.dart';
 

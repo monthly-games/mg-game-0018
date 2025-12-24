@@ -1,7 +1,13 @@
-# 카툰 레이싱 RPG - BM 설계 문서
+﻿# 카툰 레이싱 RPG - BM 설계 문서
 
 > game_id: game_0018
 > repo: mg-game-0018
+> title_kr: 카툰 레이싱 RPG
+> title_en: Cartoon Racing RPG
+> genre_tags: racing, card, idle
+> doc_type: bm_design
+> source_of_truth: docs/design/gdd_game_0018.json
+> last_updated: 2025-12-19
 
 ---
 

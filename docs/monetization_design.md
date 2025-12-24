@@ -1,4 +1,13 @@
-# game_0018 수익화 전략 - 카툰 레이싱 RPG
+﻿# game_0018 수익화 전략 - 카툰 레이싱 RPG
+
+> game_id: game_0018
+> repo: mg-game-0018
+> title_kr: 카툰 레이싱 RPG
+> title_en: Cartoon Racing RPG
+> genre_tags: racing, card, idle
+> doc_type: monetization_design
+> source_of_truth: docs/design/gdd_game_0018.json
+> last_updated: 2025-12-19
 
 ## 게임 개요
 - **장르**: 레이싱 + 캐릭터 수집 + JRPG

@@ -259,16 +259,16 @@ int raceScore(int position, int lapTime, Vehicle vehicle) {
 ## 6. 프로덕션 체크리스트
 
 ### 핵심 기능
-- [ ] 레이싱 시스템
-- [ ] 카드 시스템
-- [ ] 차량 업그레이드
+- [x] 레이싱 시스템 (RaceEngine: 속도 시뮬레이션, 포지션 계산, 상대 AI)
+- [x] 카드 시스템 (CardManager: 장착/해제, 덱 최대 3장, 레벨업)
+- [x] 차량 업그레이드 (GarageManager: speed/acceleration/handling 레벨업)
 - [ ] PvP 매칭
 - [ ] 방치 수익
 
 ### 콘텐츠
-- [ ] 20+ 트랙
-- [ ] 15+ 차량
-- [ ] 30+ 카드
+- [x] 트랙 데이터 (TrackData: 길이/난이도, 3단계 난이도)
+- [x] 차량 데이터 (VehicleData: 기본 스탯, 업그레이드 시스템)
+- [x] 카드 데이터 (CardData: boost/attack/defense 타입, 희귀도)
 - [ ] 6 리그 티어
 - [ ] 튜토리얼
 
@@ -315,3 +315,4 @@ int raceScore(int position, int lapTime, Vehicle vehicle) {
 ---
 
 *마지막 업데이트: 2025-12-19*
+

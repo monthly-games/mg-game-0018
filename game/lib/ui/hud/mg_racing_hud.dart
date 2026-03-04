@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:mg_common_game/core/ui/theme/mg_colors.dart';
 import 'package:mg_common_game/core/ui/layout/mg_spacing.dart';
 import 'package:mg_common_game/core/ui/typography/mg_text_styles.dart';
-import 'package:mg_common_game/core/ui/widgets/buttons/mg_icon_button.dart';
-import 'package:mg_common_game/core/ui/widgets/progress/mg_linear_progress.dart';
+import 'package:mg_common_game/core/ui/widgets/buttons/mg_button.dart';
+import 'package:mg_common_game/core/ui/widgets/progress/mg_progress.dart';
 
 /// MG-0018 Cartoon Racing RPG HUD
 /// 레이싱 게임용 HUD - 속도, 부스트, 랩, 순위 표시

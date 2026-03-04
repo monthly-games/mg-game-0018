@@ -1,19 +1,311 @@
 import 'package:flutter/material.dart';
-import 'screens/main_screen.dart';
+import 'package:flutter/services.dart';
+import 'package:get_it/get_it.dart';
+import 'package:mg_common_game/systems/progression/upgrade_manager.dart';
+import 'package:mg_common_game/core/ui/theme/mg_colors.dart';
+import 'package:mg_common_game/core/ui/typography/mg_text_styles.dart';
+import 'package:mg_common_game/core/ui/layout/mg_spacing.dart';
+import 'package:game/screens/main_screen.dart';
+import 'package:game/core/game_manager.dart';
+import 'package:game/core/audio_manager.dart';
+import 'package:game/features/racing/logic/racing_physics.dart';
+import 'package:game/features/racing/logic/vehicle_controller.dart';
+import 'package:game/features/racing/logic/race_manager.dart';
 
-void main() {
+// ============================================================
+// Service Locator
+// ============================================================
+final GetIt getIt = GetIt.instance;
+
+// ============================================================
+// App Entry Point
+// ============================================================
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // Allow both portrait and landscape for racing gameplay
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.landscapeLeft,
+    DeviceOrientation.landscapeRight,
+  ]);
+
+  // Dark system chrome matching the racing theme
+  SystemChrome.setSystemUIOverlayStyle(
+    const SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      statusBarIconBrightness: Brightness.light,
+      systemNavigationBarColor: MGColors.backgroundDark,
+    ),
+  );
+
+  await _initializeServices();
+  _registerUpgrades();
+  await _loadSavedProgress();
+
   runApp(const CartoonRacingApp());
 }
 
+// ============================================================
+// Service Initialization
+// ============================================================
+Future<void> _initializeServices() async {
+  // Core singletons (GameManager & AudioManager use internal singletons)
+  final gameManager = GameManager();
+  final audioManager = AudioManager();
+  audioManager.initialize();
+
+  // Racing physics engine with tunable base parameters
+  final racingPhysics = RacingPhysics(
+    baseAcceleration: RacingConfig.baseAcceleration,
+    baseMaxSpeed: RacingConfig.baseMaxSpeed,
+    baseFriction: RacingConfig.baseFriction,
+    baseTurnSpeed: RacingConfig.baseTurnSpeed,
+    baseBraking: RacingConfig.baseBraking,
+  );
+
+  // Vehicle controller wired to the physics engine
+  final vehicleController = VehicleController(
+    physics: racingPhysics,
+    nitroCapacity: RacingConfig.defaultNitroCapacity,
+    nitroRechargeRate: RacingConfig.nitroRechargeRate,
+  );
+
+  // Race progression tracker (laps, checkpoints, timing)
+  final raceManager = RaceManager(
+    defaultLapCount: RacingConfig.defaultLapCount,
+  );
+
+  // Upgrade system from mg_common_game
+  final upgradeManager = UpgradeManager();
+
+  // ── Register all services in GetIt ───────────
+  getIt.registerSingleton<GameManager>(gameManager);
+  getIt.registerSingleton<AudioManager>(audioManager);
+  getIt.registerSingleton<RacingPhysics>(racingPhysics);
+  getIt.registerSingleton<VehicleController>(vehicleController);
+  getIt.registerSingleton<RaceManager>(raceManager);
+  getIt.registerSingleton<UpgradeManager>(upgradeManager);
+
+  // Initialize game data (loads saves, grants starter content)
+  await gameManager.initialize();
+}
+
+// ============================================================
+// Load Saved Upgrade Progress
+// ============================================================
+Future<void> _loadSavedProgress() async {
+  final upgradeManager = getIt<UpgradeManager>();
+  await upgradeManager.loadUpgrades();
+
+  // Sync physics parameters with upgrade levels
+  final physics = getIt<RacingPhysics>();
+  final enginePower = upgradeManager.getUpgrade('engine_power');
+  final topSpeed = upgradeManager.getUpgrade('top_speed');
+  final handling = upgradeManager.getUpgrade('handling');
+  final braking = upgradeManager.getUpgrade('braking');
+  final tireGrip = upgradeManager.getUpgrade('tire_grip');
+  final aero = upgradeManager.getUpgrade('aerodynamics');
+  final weight = upgradeManager.getUpgrade('weight_reduction');
+
+  physics.applyUpgrades(
+    accelerationBonus: enginePower?.currentValue ?? 0,
+    maxSpeedBonus: topSpeed?.currentValue ?? 0,
+    handlingBonus: handling?.currentValue ?? 0,
+    brakingBonus: braking?.currentValue ?? 0,
+    gripBonus: tireGrip?.currentValue ?? 0,
+    aeroBonus: aero?.currentValue ?? 0,
+    weightBonus: weight?.currentValue ?? 0,
+  );
+}
+
+// ============================================================
+// Upgrade Registration — 8 Racing Upgrades
+// ============================================================
+void _registerUpgrades() {
+  final upgradeManager = getIt<UpgradeManager>();
+
+  // 1. Engine Power — acceleration off the line and out of corners
+  upgradeManager.registerUpgrade(Upgrade(
+    id: 'engine_power',
+    name: 'Engine Power',
+    description: 'Boosts acceleration off the line and out of corners',
+    maxLevel: 10,
+    baseCost: 100,
+    costMultiplier: 1.5,
+    valuePerLevel: 0.5,
+  ));
+
+  // 2. Top Speed — raises the maximum velocity cap
+  upgradeManager.registerUpgrade(Upgrade(
+    id: 'top_speed',
+    name: 'Top Speed',
+    description: 'Increases maximum velocity on straightaways',
+    maxLevel: 10,
+    baseCost: 150,
+    costMultiplier: 1.6,
+    valuePerLevel: 2.0,
+  ));
+
+  // 3. Handling — sharper cornering and turn responsiveness
+  upgradeManager.registerUpgrade(Upgrade(
+    id: 'handling',
+    name: 'Handling',
+    description: 'Improves cornering speed and turn responsiveness',
+    maxLevel: 10,
+    baseCost: 120,
+    costMultiplier: 1.4,
+    valuePerLevel: 0.3,
+  ));
+
+  // 4. Braking System — shorter braking distance
+  upgradeManager.registerUpgrade(Upgrade(
+    id: 'braking',
+    name: 'Braking System',
+    description: 'Reduces braking distance for tighter cornering',
+    maxLevel: 8,
+    baseCost: 80,
+    costMultiplier: 1.5,
+    valuePerLevel: 0.5,
+  ));
+
+  // 5. Nitro Tank — longer boost duration
+  upgradeManager.registerUpgrade(Upgrade(
+    id: 'nitro_capacity',
+    name: 'Nitro Tank',
+    description: 'Increases nitro fuel capacity for longer boosts',
+    maxLevel: 8,
+    baseCost: 200,
+    costMultiplier: 1.7,
+    valuePerLevel: 15.0,
+  ));
+
+  // 6. Tire Grip — better traction in turns
+  upgradeManager.registerUpgrade(Upgrade(
+    id: 'tire_grip',
+    name: 'Tire Grip',
+    description: 'Improves traction, reducing speed loss in corners',
+    maxLevel: 8,
+    baseCost: 130,
+    costMultiplier: 1.5,
+    valuePerLevel: 0.08,
+  ));
+
+  // 7. Weight Reduction — lighter chassis for faster acceleration
+  upgradeManager.registerUpgrade(Upgrade(
+    id: 'weight_reduction',
+    name: 'Weight Reduction',
+    description: 'Lighter chassis for faster acceleration and higher top speed',
+    maxLevel: 6,
+    baseCost: 300,
+    costMultiplier: 2.0,
+    valuePerLevel: 1.5,
+  ));
+
+  // 8. Aerodynamics — reduced air drag at high speeds
+  upgradeManager.registerUpgrade(Upgrade(
+    id: 'aerodynamics',
+    name: 'Aerodynamics',
+    description: 'Reduced air drag improves high-speed performance',
+    maxLevel: 6,
+    baseCost: 250,
+    costMultiplier: 1.8,
+    valuePerLevel: 0.04,
+  ));
+}
+
+// ============================================================
+// App Widget — MG Design System Theme
+// ============================================================
 class CartoonRacingApp extends StatelessWidget {
   const CartoonRacingApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Cartoon Racing RPG',
-      theme: ThemeData(primarySwatch: Colors.blue, useMaterial3: true),
+      title: RacingConfig.gameTitle,
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        brightness: Brightness.dark,
+        primaryColor: MGColors.year2Primary,
+        scaffoldBackgroundColor: MGColors.backgroundDark,
+        colorScheme: ColorScheme.dark(
+          primary: MGColors.year2Primary,
+          secondary: MGColors.year2Accent,
+          surface: MGColors.surfaceDark,
+          error: MGColors.error,
+        ),
+        appBarTheme: AppBarTheme(
+          backgroundColor: MGColors.surfaceDark,
+          foregroundColor: MGColors.textHighEmphasis,
+          elevation: 0,
+          centerTitle: true,
+          titleTextStyle: MGTextStyles.h2.copyWith(
+            color: MGColors.textHighEmphasis,
+          ),
+        ),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: MGColors.year2Primary,
+            foregroundColor: MGColors.textHighEmphasis,
+            padding: MGSpacing.buttonEdgePadding,
+            textStyle: MGTextStyles.button,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(MGSpacing.xs),
+            ),
+          ),
+        ),
+        textTheme: TextTheme(
+          headlineLarge: MGTextStyles.h1,
+          headlineMedium: MGTextStyles.h2,
+          headlineSmall: MGTextStyles.h3,
+          bodyLarge: MGTextStyles.body,
+          bodyMedium: MGTextStyles.bodySmall,
+          labelLarge: MGTextStyles.button,
+        ),
+      ),
       home: const MainScreen(),
     );
   }
+}
+
+// ============================================================
+// Racing Configuration Constants
+// ============================================================
+class RacingConfig {
+  RacingConfig._();
+
+  /// Game Identity
+  static const String gameId = 'MG-0018';
+  static const String gameTitle = 'Cartoon Racing RPG';
+  static const String gameVersion = '1.0.0';
+
+  /// Physics Base Values
+  static const double baseAcceleration = 5.0;
+  static const double baseMaxSpeed = 20.0;
+  static const double baseFriction = 0.95;
+  static const double baseTurnSpeed = 3.0;
+  static const double baseBraking = 8.0;
+
+  /// Nitro System
+  static const double defaultNitroCapacity = 100.0;
+  static const double nitroRechargeRate = 5.0;
+  static const double nitroSpeedMultiplier = 1.5;
+  static const double nitroDrainRate = 20.0;
+
+  /// Race Defaults
+  static const int defaultLapCount = 3;
+  static const int defaultOpponentCount = 5;
+  static const int totalCheckpointsPerLap = 4;
+
+  /// Economy Rewards
+  static const int winRewardBase = 500;
+  static const int lapBonusBase = 100;
+  static const int perfectLapBonus = 250;
+  static const int topThreeMultiplier = 2;
+
+  /// Difficulty Scaling
+  static const double easySpeedMultiplier = 0.85;
+  static const double normalSpeedMultiplier = 1.0;
+  static const double hardSpeedMultiplier = 1.2;
 }

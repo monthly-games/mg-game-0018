@@ -148,7 +148,7 @@ class _LeagueScreenState extends State<LeagueScreen> {
 
   Widget _buildCurrentLeagueCard(LeagueTier league, PlayerManager player) {
     return Card(
-      color: league.color.withOpacity(0.2),
+      color: league.color.withValues(alpha: 0.2),
       child: Container(
         decoration: BoxDecoration(
           border: Border.all(color: league.color, width: 3),
@@ -285,7 +285,7 @@ class _LeagueScreenState extends State<LeagueScreen> {
 
         return Card(
           color: isCurrentLeague
-              ? league.color.withOpacity(0.2)
+              ? league.color.withValues(alpha: 0.2)
               : (isUnlocked ? AppColors.panel : Colors.grey[850]),
           child: ListTile(
             leading: Icon(

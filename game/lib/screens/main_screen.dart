@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'achievement_screen.dart';
+import 'daily_quest_screen.dart';
 import 'garage_screen.dart';
 import 'race_screen.dart';
 import '../core/game_manager.dart';
@@ -19,7 +21,33 @@ class MainScreen extends StatelessWidget {
         }
 
         return Scaffold(
-          appBar: AppBar(title: const Text('Cartoon Racing RPG')),
+          appBar: AppBar(
+            title: const Text('Cartoon Racing RPG'),
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.assignment_rounded),
+                tooltip: 'Daily Quests',
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (_) => const DailyQuestScreen(),
+                    ),
+                  );
+                },
+              ),
+              IconButton(
+                icon: const Icon(Icons.emoji_events_rounded),
+                tooltip: 'Achievements',
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (_) => const AchievementScreen(),
+                    ),
+                  );
+                },
+              ),
+            ],
+          ),
           body: Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,

@@ -35,7 +35,8 @@ dependencies:
   get_it: ^9.2.0
   equatable: ^2.0.5
   mg_common_game:
-    path: ../libs/mg_common_game
+    path: ../../../repos/mg-common-game
+  firebase_analytics: ^10.10.7
   flame: ^1.13.0
   
   # The following adds the Cupertino Icons font to your application.

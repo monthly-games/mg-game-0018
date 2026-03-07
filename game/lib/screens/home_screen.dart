@@ -6,6 +6,8 @@ import 'package:mg_common_game/core/ui/theme/app_text_styles.dart';
 import '../features/player/player_manager.dart';
 import '../features/save/save_manager.dart';
 import '../game/tracks/track_data.dart';
+import 'achievement_screen.dart';
+import 'daily_quest_screen.dart';
 import 'race_screen.dart';
 import 'garage_screen.dart';
 import 'deck_screen.dart';
@@ -71,7 +73,7 @@ class _HomeScreenState extends State<HomeScreen> {
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: Colors.blue.withOpacity(0.2),
+                  color: Colors.blue.withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(color: Colors.blue),
                 ),
@@ -133,6 +135,28 @@ class _HomeScreenState extends State<HomeScreen> {
         title: const Text('Cartoon Racing RPG'),
         backgroundColor: AppColors.primary,
         actions: [
+          IconButton(
+            icon: const Icon(Icons.assignment_rounded),
+            tooltip: 'Daily Quests',
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (_) => const DailyQuestScreen(),
+                ),
+              );
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.emoji_events_rounded),
+            tooltip: 'Achievements',
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (_) => const AchievementScreen(),
+                ),
+              );
+            },
+          ),
           IconButton(
             icon: const Icon(Icons.save),
             onPressed: () async {

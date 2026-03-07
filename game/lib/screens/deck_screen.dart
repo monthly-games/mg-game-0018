@@ -113,7 +113,7 @@ class _DeckScreenState extends State<DeckScreen> {
       margin: const EdgeInsets.symmetric(horizontal: 4),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: _getCardRarityColor(card!.rarity).withOpacity(0.3),
+        color: _getCardRarityColor(card!.rarity).withValues(alpha: 0.3),
         border: Border.all(color: _getCardRarityColor(card.rarity), width: 2),
         borderRadius: BorderRadius.circular(8),
       ),
@@ -180,7 +180,7 @@ class _DeckScreenState extends State<DeckScreen> {
           color: isEquipped
               ? Colors.grey[700]
               : (isUnlocked
-                  ? _getCardRarityColor(card.rarity).withOpacity(0.3)
+                  ? _getCardRarityColor(card.rarity).withValues(alpha: 0.3)
                   : Colors.grey[900]),
           border: Border.all(
             color: isUnlocked ? _getCardRarityColor(card.rarity) : Colors.grey[700]!,

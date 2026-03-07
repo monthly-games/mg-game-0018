@@ -96,7 +96,7 @@ class MGRacingHud extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(MGSpacing.sm),
       decoration: BoxDecoration(
-        color: positionColor.withOpacity(0.9),
+        color: positionColor.withValues(alpha: 0.9),
         borderRadius: BorderRadius.circular(MGSpacing.sm),
         border: Border.all(
           color: position <= 3 ? Colors.white : MGColors.border,
@@ -105,7 +105,7 @@ class MGRacingHud extends StatelessWidget {
         boxShadow: position == 1
             ? [
                 BoxShadow(
-                  color: Colors.amber.withOpacity(0.5),
+                  color: Colors.amber.withValues(alpha: 0.5),
                   blurRadius: 12,
                   spreadRadius: 2,
                 ),
@@ -137,7 +137,7 @@ class MGRacingHud extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(MGSpacing.sm),
       decoration: BoxDecoration(
-        color: MGColors.surface.withOpacity(0.85),
+        color: MGColors.surface.withValues(alpha: 0.85),
         borderRadius: BorderRadius.circular(MGSpacing.sm),
         border: Border.all(color: MGColors.border),
       ),
@@ -195,7 +195,7 @@ class MGRacingHud extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(MGSpacing.sm),
       decoration: BoxDecoration(
-        color: MGColors.surface.withOpacity(0.85),
+        color: MGColors.surface.withValues(alpha: 0.85),
         borderRadius: BorderRadius.circular(MGSpacing.sm),
         border: Border.all(color: MGColors.border),
       ),
@@ -234,7 +234,7 @@ class MGRacingHud extends StatelessWidget {
             child: MGLinearProgress(
               value: speedRatio,
               height: 8,
-              backgroundColor: Colors.grey.withOpacity(0.3),
+              backgroundColor: Colors.grey.withValues(alpha: 0.3),
               progressColor: _getSpeedColor(speedRatio),
             ),
           ),
@@ -255,12 +255,12 @@ class MGRacingHud extends StatelessWidget {
           gradient: LinearGradient(
             colors: canBoost
                 ? [
-                    Colors.orange.withOpacity(0.8),
-                    Colors.red.withOpacity(0.6),
+                    Colors.orange.withValues(alpha: 0.8),
+                    Colors.red.withValues(alpha: 0.6),
                   ]
                 : [
-                    Colors.grey.withOpacity(0.5),
-                    Colors.grey.withOpacity(0.3),
+                    Colors.grey.withValues(alpha: 0.5),
+                    Colors.grey.withValues(alpha: 0.3),
                   ],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
@@ -273,7 +273,7 @@ class MGRacingHud extends StatelessWidget {
           boxShadow: canBoost
               ? [
                   BoxShadow(
-                    color: Colors.orange.withOpacity(0.4),
+                    color: Colors.orange.withValues(alpha: 0.4),
                     blurRadius: 12,
                     spreadRadius: 2,
                   ),

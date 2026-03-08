@@ -84,11 +84,11 @@ class MGRacingHud extends StatelessWidget {
   Widget _buildPositionBadge() {
     Color positionColor;
     if (position == 1) {
-      positionColor = Colors.amber;
+      positionColor = MGColors.gold;
     } else if (position == 2) {
-      positionColor = Colors.grey[300]!;
+      positionColor = MGColors.common;
     } else if (position == 3) {
-      positionColor = Colors.brown[300]!;
+      positionColor = MGColors.warning;
     } else {
       positionColor = MGColors.surface;
     }
@@ -99,13 +99,13 @@ class MGRacingHud extends StatelessWidget {
         color: positionColor.withValues(alpha: 0.9),
         borderRadius: BorderRadius.circular(MGSpacing.sm),
         border: Border.all(
-          color: position <= 3 ? Colors.white : MGColors.border,
+          color: position <= 3 ? MGColors.textHighEmphasis : MGColors.border,
           width: 2,
         ),
         boxShadow: position == 1
             ? [
                 BoxShadow(
-                  color: Colors.amber.withValues(alpha: 0.5),
+                  color: MGColors.gold.withValues(alpha: 0.5),
                   blurRadius: 12,
                   spreadRadius: 2,
                 ),
@@ -118,14 +118,14 @@ class MGRacingHud extends StatelessWidget {
           Text(
             _getPositionSuffix(position),
             style: MGTextStyles.h2.copyWith(
-              color: position <= 3 ? Colors.black87 : Colors.white,
+              color: position <= 3 ? MGColors.backgroundDarkDark.withValues(alpha: 0.87) : MGColors.textHighEmphasis,
               fontWeight: FontWeight.bold,
             ),
           ),
           Text(
             '/ $totalRacers',
             style: MGTextStyles.caption.copyWith(
-              color: position <= 3 ? Colors.black54 : Colors.white70,
+              color: position <= 3 ? MGColors.backgroundDarkDark.withValues(alpha: 0.54) : MGColors.textMediumEmphasis,
             ),
           ),
         ],
@@ -148,12 +148,12 @@ class MGRacingHud extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.flag, color: Colors.white, size: 18),
+              Icon(Icons.flag, color: MGColors.textHighEmphasis, size: 18),
               SizedBox(width: MGSpacing.xs),
               Text(
                 'LAP $currentLap / $totalLaps',
                 style: MGTextStyles.buttonMedium.copyWith(
-                  color: Colors.white,
+                  color: MGColors.textHighEmphasis,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -164,12 +164,12 @@ class MGRacingHud extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.timer, color: MGColors.primaryAction, size: 16),
+              Icon(Icons.timer, color: MGColors.primaryActionAction, size: 16),
               SizedBox(width: MGSpacing.xxs),
               Text(
                 _formatDuration(raceTime),
                 style: MGTextStyles.h3.copyWith(
-                  color: Colors.white,
+                  color: MGColors.textHighEmphasis,
                   fontFamily: 'monospace',
                 ),
               ),
@@ -180,7 +180,7 @@ class MGRacingHud extends StatelessWidget {
             Text(
               'Best: ${_formatDuration(bestLapTime!)}',
               style: MGTextStyles.caption.copyWith(
-                color: Colors.greenAccent,
+                color: MGColors.success,
               ),
             ),
           ],
@@ -221,7 +221,7 @@ class MGRacingHud extends StatelessWidget {
                 child: Text(
                   'km/h',
                   style: MGTextStyles.caption.copyWith(
-                    color: Colors.white70,
+                    color: MGColors.textMediumEmphasis,
                   ),
                 ),
               ),
@@ -234,7 +234,7 @@ class MGRacingHud extends StatelessWidget {
             child: MGLinearProgress(
               value: speedRatio,
               height: 8,
-              backgroundColor: Colors.grey.withValues(alpha: 0.3),
+              backgroundColor: MGColors.common.withValues(alpha: 0.3),
               progressColor: _getSpeedColor(speedRatio),
             ),
           ),
@@ -255,25 +255,25 @@ class MGRacingHud extends StatelessWidget {
           gradient: LinearGradient(
             colors: canBoost
                 ? [
-                    Colors.orange.withValues(alpha: 0.8),
-                    Colors.red.withValues(alpha: 0.6),
+                    MGColors.warning.withValues(alpha: 0.8),
+                    MGColors.error.withValues(alpha: 0.6),
                   ]
                 : [
-                    Colors.grey.withValues(alpha: 0.5),
-                    Colors.grey.withValues(alpha: 0.3),
+                    MGColors.common.withValues(alpha: 0.5),
+                    MGColors.common.withValues(alpha: 0.3),
                   ],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
           borderRadius: BorderRadius.circular(MGSpacing.sm),
           border: Border.all(
-            color: canBoost ? Colors.orange : Colors.grey,
+            color: canBoost ? MGColors.warning : MGColors.common,
             width: 2,
           ),
           boxShadow: canBoost
               ? [
                   BoxShadow(
-                    color: Colors.orange.withValues(alpha: 0.4),
+                    color: MGColors.warning.withValues(alpha: 0.4),
                     blurRadius: 12,
                     spreadRadius: 2,
                   ),
@@ -285,14 +285,14 @@ class MGRacingHud extends StatelessWidget {
           children: [
             Icon(
               Icons.bolt,
-              color: canBoost ? Colors.yellow : Colors.grey[400],
+              color: canBoost ? MGColors.gold : MGColors.common,
               size: 32,
             ),
             SizedBox(height: MGSpacing.xxs),
             Text(
               'BOOST',
               style: MGTextStyles.buttonSmall.copyWith(
-                color: Colors.white,
+                color: MGColors.textHighEmphasis,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -303,8 +303,8 @@ class MGRacingHud extends StatelessWidget {
               child: MGLinearProgress(
                 value: boostRatio,
                 height: 10,
-                backgroundColor: Colors.black26,
-                progressColor: canBoost ? Colors.yellow : Colors.grey,
+                backgroundColor: MGColors.backgroundDarkDark.withValues(alpha: 0.26),
+                progressColor: canBoost ? MGColors.gold : MGColors.common,
               ),
             ),
           ],
@@ -314,10 +314,10 @@ class MGRacingHud extends StatelessWidget {
   }
 
   Color _getSpeedColor(double ratio) {
-    if (ratio > 0.8) return Colors.red;
-    if (ratio > 0.6) return Colors.orange;
-    if (ratio > 0.4) return Colors.yellow;
-    return Colors.green;
+    if (ratio > 0.8) return MGColors.error;
+    if (ratio > 0.6) return MGColors.warning;
+    if (ratio > 0.4) return MGColors.gold;
+    return MGColors.success;
   }
 
   String _getPositionSuffix(int pos) {

@@ -199,7 +199,7 @@ class _BattlePassScreenState extends State<BattlePassScreen>
     }
 
     return Scaffold(
-      backgroundColor: MGColors.backgroundDark,
+      backgroundColor: MGColors.backgroundDarkDark,
       body: SafeArea(
         child: Column(
           children: [
@@ -276,7 +276,7 @@ class _BattlePassScreenState extends State<BattlePassScreen>
       ),
       child: TabBar(
         controller: _tabController,
-        indicatorColor: MGColors.primaryAction,
+        indicatorColor: MGColors.primaryActionAction,
         labelColor: MGColors.textHighEmphasis,
         unselectedLabelColor: MGColors.textDisabled,
         tabs: const [

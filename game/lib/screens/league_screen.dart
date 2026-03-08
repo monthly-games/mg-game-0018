@@ -5,6 +5,7 @@ import 'package:mg_common_game/core/ui/theme/app_text_styles.dart';
 
 import '../features/player/player_manager.dart';
 import '../game/tracks/track_data.dart';
+import 'package:mg_common_game/core/ui/theme/mg_colors.dart';
 
 /// League tier data
 class LeagueTier {
@@ -41,7 +42,7 @@ class _LeagueScreenState extends State<LeagueScreen> {
       level: 1,
       name: 'Bronze',
       nameKo: '브론즈',
-      color: Colors.brown,
+      color: MGColors.warning,
       icon: Icons.workspace_premium,
       requiredWins: 0,
       promotionReward: 0,
@@ -50,7 +51,7 @@ class _LeagueScreenState extends State<LeagueScreen> {
       level: 2,
       name: 'Silver',
       nameKo: '실버',
-      color: Colors.grey,
+      color: MGColors.common,
       icon: Icons.military_tech,
       requiredWins: 5,
       promotionReward: 500,
@@ -59,7 +60,7 @@ class _LeagueScreenState extends State<LeagueScreen> {
       level: 3,
       name: 'Gold',
       nameKo: '골드',
-      color: Colors.amber,
+      color: MGColors.gold,
       icon: Icons.emoji_events,
       requiredWins: 15,
       promotionReward: 1500,
@@ -68,7 +69,7 @@ class _LeagueScreenState extends State<LeagueScreen> {
       level: 4,
       name: 'Platinum',
       nameKo: '플래티넘',
-      color: Colors.cyan,
+      color: MGColors.energy,
       icon: Icons.stars,
       requiredWins: 30,
       promotionReward: 3000,
@@ -77,7 +78,7 @@ class _LeagueScreenState extends State<LeagueScreen> {
       level: 5,
       name: 'Diamond',
       nameKo: '다이아몬드',
-      color: Colors.blue,
+      color: MGColors.info,
       icon: Icons.diamond,
       requiredWins: 50,
       promotionReward: 5000,
@@ -239,7 +240,7 @@ class _LeagueScreenState extends State<LeagueScreen> {
                   if (canPromote) ...[
                     Text(
                       '승급 가능!',
-                      style: AppTextStyles.body.copyWith(color: Colors.green),
+                      style: AppTextStyles.body.copyWith(color: MGColors.success),
                     ),
                     Text(
                       '보상: ${nextLeague.promotionReward} 코인',
@@ -253,7 +254,7 @@ class _LeagueScreenState extends State<LeagueScreen> {
                     const SizedBox(height: 4),
                     LinearProgressIndicator(
                       value: _totalWins / nextLeague.requiredWins,
-                      backgroundColor: Colors.grey[300],
+                      backgroundColor: MGColors.common,
                       valueColor: AlwaysStoppedAnimation<Color>(nextLeague.color),
                     ),
                   ],
@@ -286,17 +287,17 @@ class _LeagueScreenState extends State<LeagueScreen> {
         return Card(
           color: isCurrentLeague
               ? league.color.withValues(alpha: 0.2)
-              : (isUnlocked ? AppColors.panel : Colors.grey[850]),
+              : (isUnlocked ? AppColors.panel : MGColors.common),
           child: ListTile(
             leading: Icon(
               league.icon,
-              color: isUnlocked ? league.color : Colors.grey,
+              color: isUnlocked ? league.color : MGColors.common,
               size: 32,
             ),
             title: Text(
               league.nameKo,
               style: AppTextStyles.body.copyWith(
-                color: isUnlocked ? league.color : Colors.grey,
+                color: isUnlocked ? league.color : MGColors.common,
                 fontWeight: isCurrentLeague ? FontWeight.bold : FontWeight.normal,
               ),
             ),
@@ -309,10 +310,10 @@ class _LeagueScreenState extends State<LeagueScreen> {
               style: AppTextStyles.caption,
             ),
             trailing: isCurrentLeague
-                ? const Icon(Icons.check_circle, color: Colors.green)
+                ? const Icon(Icons.check_circle, color: MGColors.success)
                 : (isUnlocked
-                    ? const Icon(Icons.lock_open, color: Colors.grey)
-                    : const Icon(Icons.lock, color: Colors.grey)),
+                    ? const Icon(Icons.lock_open, color: MGColors.common)
+                    : const Icon(Icons.lock, color: MGColors.common)),
           ),
         );
       }).toList(),
@@ -338,7 +339,7 @@ class _LeagueScreenState extends State<LeagueScreen> {
           const SizedBox(height: 16),
           Text(
             '잠긴 트랙',
-            style: AppTextStyles.caption.copyWith(color: Colors.grey),
+            style: AppTextStyles.caption.copyWith(color: MGColors.common),
           ),
           const SizedBox(height: 8),
           ...lockedTracks.map((track) => _buildTrackCard(track, false)),
@@ -349,30 +350,30 @@ class _LeagueScreenState extends State<LeagueScreen> {
 
   Widget _buildTrackCard(Track track, bool isUnlocked) {
     return Card(
-      color: isUnlocked ? AppColors.panel : Colors.grey[850],
+      color: isUnlocked ? AppColors.panel : MGColors.common,
       child: ListTile(
         leading: Container(
           width: 50,
           height: 50,
           decoration: BoxDecoration(
-            color: isUnlocked ? track.roadColor : Colors.grey,
+            color: isUnlocked ? track.roadColor : MGColors.common,
             borderRadius: BorderRadius.circular(8),
             border: Border.all(
-              color: isUnlocked ? track.borderColor : Colors.grey[700]!,
+              color: isUnlocked ? track.borderColor : MGColors.common,
               width: 2,
             ),
           ),
           child: Center(
             child: Icon(
               _getTrackTypeIcon(track.type),
-              color: isUnlocked ? track.borderColor : Colors.grey[600],
+              color: isUnlocked ? track.borderColor : MGColors.common,
             ),
           ),
         ),
         title: Text(
           track.nameKo,
           style: AppTextStyles.body.copyWith(
-            color: isUnlocked ? Colors.white : Colors.grey,
+            color: isUnlocked ? MGColors.textHighEmphasis : MGColors.common,
           ),
         ),
         subtitle: Text(
@@ -382,8 +383,8 @@ class _LeagueScreenState extends State<LeagueScreen> {
           style: AppTextStyles.caption,
         ),
         trailing: isUnlocked
-            ? const Icon(Icons.check_circle, color: Colors.green)
-            : const Icon(Icons.lock, color: Colors.grey),
+            ? const Icon(Icons.check_circle, color: MGColors.success)
+            : const Icon(Icons.lock, color: MGColors.common),
       ),
     );
   }
@@ -454,7 +455,7 @@ class _LeagueScreenState extends State<LeagueScreen> {
             Text(
               '${nextLeague.promotionReward} 코인 획득!',
               style: AppTextStyles.body.copyWith(
-                color: Colors.yellow,
+                color: MGColors.gold,
                 fontWeight: FontWeight.bold,
               ),
             ),

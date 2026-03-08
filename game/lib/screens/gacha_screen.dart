@@ -18,6 +18,7 @@ import 'package:mg_common_game/core/ui/mg_ui.dart';
 import 'package:mg_common_game/core/ui/widgets/gacha/gacha_pull_animation.dart';
 import 'package:mg_common_game/systems/gacha/gacha_manager.dart';
 import 'package:mg_common_game/systems/gacha/gacha_pool.dart';
+import 'package:mg_common_game/core/ui/theme/mg_colors.dart';
 
 /// Gacha pull costs (game-specific tuning constants).
 const int _kSinglePullCost = 160;
@@ -152,7 +153,7 @@ class _GachaScreenState extends State<GachaScreen>
   Widget build(BuildContext context) {
     if (_pullResults != null) {
       return Scaffold(
-        backgroundColor: MGColors.backgroundDark,
+        backgroundColor: MGColors.backgroundDarkDark,
         body: SafeArea(
           child: Column(
             children: [
@@ -185,7 +186,7 @@ class _GachaScreenState extends State<GachaScreen>
                     onPressed: _dismissResults,
                     size: MGButtonSize.large,
                     width: double.infinity,
-                    backgroundColor: MGColors.primaryAction,
+                    backgroundColor: MGColors.primaryActionAction,
                   ),
                 ),
             ],
@@ -195,7 +196,7 @@ class _GachaScreenState extends State<GachaScreen>
     }
 
     return Scaffold(
-      backgroundColor: MGColors.backgroundDark,
+      backgroundColor: MGColors.backgroundDarkDark,
       body: SafeArea(
         child: Column(
           children: [
@@ -484,7 +485,7 @@ class _GachaScreenState extends State<GachaScreen>
             child: Text(
               rarity.nameKr,
               style: const TextStyle(
-                color: Colors.white,
+                color: MGColors.textHighEmphasis,
                 fontSize: 10,
                 fontWeight: FontWeight.bold,
               ),

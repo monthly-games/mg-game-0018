@@ -4,6 +4,7 @@ import '../features/racing/logic/race_engine.dart';
 import '../features/racing/data/track_data.dart';
 import '../features/racing/models/track.dart';
 import '../core/audio_manager.dart';
+import 'package:mg_common_game/core/ui/theme/mg_colors.dart';
 
 class RaceScreen extends StatefulWidget {
   const RaceScreen({super.key});
@@ -130,8 +131,8 @@ class _RaceScreenState extends State<RaceScreen> {
                 onPressed: _startRace,
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.all(24),
-                  backgroundColor: Colors.green,
-                  foregroundColor: Colors.white,
+                  backgroundColor: MGColors.success,
+                  foregroundColor: MGColors.textHighEmphasis,
                 ),
                 child: const Text('START RACE', style: TextStyle(fontSize: 24)),
               ),
@@ -141,7 +142,7 @@ class _RaceScreenState extends State<RaceScreen> {
               Text(
                 'Last Run: ${_lastResult!.position}th Place',
                 textAlign: TextAlign.center,
-                style: const TextStyle(color: Colors.grey),
+                style: const TextStyle(color: MGColors.common),
               ),
           ],
         ),

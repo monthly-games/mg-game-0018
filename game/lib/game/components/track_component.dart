@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:flame/components.dart';
 import '../tracks/track_data.dart';
+import 'package:mg_common_game/core/ui/theme/mg_colors.dart';
 
 /// Track rendering component
 class TrackComponent extends Component {
@@ -64,7 +65,7 @@ class TrackComponent extends Component {
 
   void _drawDashedCenterLine(Canvas canvas) {
     final dashPaint = Paint()
-      ..color = const Color(0x88FFFFFF)
+      ..color = MGColors.textHighEmphasis.withValues(alpha: 0.53)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 3;
 
@@ -111,7 +112,7 @@ class TrackComponent extends Component {
 
   void _drawCheckpoints(Canvas canvas) {
     final checkpointPaint = Paint()
-      ..color = const Color(0x44FFFFFF)
+      ..color = MGColors.textHighEmphasis.withValues(alpha: 0.27)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2;
 
@@ -133,7 +134,7 @@ class TrackComponent extends Component {
     final startCheckpoint = track.checkpoints.first;
 
     final finishPaint = Paint()
-      ..color = const Color(0xFFFFFFFF)
+      ..color = MGColors.textHighEmphasis
       ..style = PaintingStyle.fill;
 
     // Checkered pattern

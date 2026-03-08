@@ -3,6 +3,7 @@ import '../core/game_manager.dart';
 import '../features/racing/models/vehicle.dart';
 import '../features/meta/upgrade_config.dart';
 import '../core/audio_manager.dart';
+import 'package:mg_common_game/core/ui/theme/mg_colors.dart';
 
 class GarageScreen extends StatefulWidget {
   const GarageScreen({super.key});
@@ -131,8 +132,8 @@ class _VehicleCardState extends State<_VehicleCard>
                 style: ElevatedButton.styleFrom(
                   backgroundColor:
                       GameManager().garage.equippedVehicle?.id == v.id
-                      ? Colors.green
-                      : Colors.grey,
+                      ? MGColors.success
+                      : MGColors.common,
                 ),
                 child: Text(
                   GameManager().garage.equippedVehicle?.id == v.id

@@ -39,7 +39,7 @@ void main() async {
     const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
       statusBarIconBrightness: Brightness.light,
-      systemNavigationBarColor: MGColors.backgroundDark,
+      systemNavigationBarColor: MGColors.backgroundDarkDark,
     ),
   );
 
@@ -243,7 +243,7 @@ class CartoonRacingApp extends StatelessWidget {
       theme: ThemeData(
         brightness: Brightness.dark,
         primaryColor: MGColors.year2Primary,
-        scaffoldBackgroundColor: MGColors.backgroundDark,
+        scaffoldBackgroundColor: MGColors.backgroundDarkDark,
         colorScheme: ColorScheme.dark(
           primary: MGColors.year2Primary,
           secondary: MGColors.year2Accent,

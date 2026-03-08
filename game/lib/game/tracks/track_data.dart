@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:flame/components.dart';
+import 'package:mg_common_game/core/ui/theme/mg_colors.dart';
 
 /// Track difficulty and theme
 enum TrackType {
@@ -101,8 +102,8 @@ class Tracks {
     ],
     startPosition: Vector2(200, 400),
     startAngle: 0,
-    roadColor: Color(0xFF333333),
-    borderColor: Color(0xFFFFFF00),
+    roadColor: MGColors.cardDark,
+    borderColor: MGColors.gold,
     backgroundColor: Color(0xFF001122),
   );
 
@@ -312,7 +313,7 @@ class Tracks {
     startPosition: Vector2(400, 700),
     startAngle: 0,
     roadColor: Color(0xFFFF00FF),
-    borderColor: Color(0xFFFFFF00),
+    borderColor: MGColors.gold,
     backgroundColor: Color(0xFF6600FF),
   );
 

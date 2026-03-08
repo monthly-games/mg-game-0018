@@ -4,6 +4,7 @@ import 'package:mg_common_game/core/ui/theme/app_colors.dart';
 import 'package:mg_common_game/core/ui/theme/app_text_styles.dart';
 import '../features/player/player_manager.dart';
 import '../features/cards/card_data.dart';
+import 'package:mg_common_game/core/ui/theme/mg_colors.dart';
 
 /// Deck management screen for ability cards
 class DeckScreen extends StatefulWidget {
@@ -34,7 +35,7 @@ class _DeckScreenState extends State<DeckScreen> {
             onPressed: () => _saveDeck(context),
             child: const Text(
               '저장',
-              style: TextStyle(color: Colors.white, fontSize: 16),
+              style: TextStyle(color: MGColors.textHighEmphasis, fontSize: 16),
             ),
           ),
         ],
@@ -121,7 +122,7 @@ class _DeckScreenState extends State<DeckScreen> {
         children: [
           Icon(
             _getCardIcon(card.type),
-            color: Colors.white,
+            color: MGColors.textHighEmphasis,
             size: 32,
           ),
           const SizedBox(height: 8),
@@ -134,7 +135,7 @@ class _DeckScreenState extends State<DeckScreen> {
           ),
           const SizedBox(height: 8),
           IconButton(
-            icon: const Icon(Icons.remove_circle, color: Colors.red),
+            icon: const Icon(Icons.remove_circle, color: MGColors.error),
             onPressed: onRemove,
             iconSize: 24,
           ),
@@ -148,18 +149,18 @@ class _DeckScreenState extends State<DeckScreen> {
       margin: const EdgeInsets.symmetric(horizontal: 4),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.grey[800],
-        border: Border.all(color: Colors.grey[600]!, width: 2),
+        color: MGColors.common,
+        border: Border.all(color: MGColors.common, width: 2),
         borderRadius: BorderRadius.circular(8),
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.add_circle_outline, color: Colors.grey[600], size: 32),
+          Icon(Icons.add_circle_outline, color: MGColors.common, size: 32),
           const SizedBox(height: 8),
           Text(
             '빈 슬롯',
-            style: AppTextStyles.caption.copyWith(color: Colors.grey[600]),
+            style: AppTextStyles.caption.copyWith(color: MGColors.common),
           ),
         ],
       ),
@@ -178,12 +179,12 @@ class _DeckScreenState extends State<DeckScreen> {
       child: Container(
         decoration: BoxDecoration(
           color: isEquipped
-              ? Colors.grey[700]
+              ? MGColors.common
               : (isUnlocked
                   ? _getCardRarityColor(card.rarity).withValues(alpha: 0.3)
-                  : Colors.grey[900]),
+                  : MGColors.common),
           border: Border.all(
-            color: isUnlocked ? _getCardRarityColor(card.rarity) : Colors.grey[700]!,
+            color: isUnlocked ? _getCardRarityColor(card.rarity) : MGColors.common,
             width: 2,
           ),
           borderRadius: BorderRadius.circular(12),
@@ -197,14 +198,14 @@ class _DeckScreenState extends State<DeckScreen> {
                 children: [
                   Icon(
                     _getCardIcon(card.type),
-                    color: isUnlocked ? Colors.white : Colors.grey[600],
+                    color: isUnlocked ? MGColors.textHighEmphasis : MGColors.common,
                     size: 48,
                   ),
                   const SizedBox(height: 12),
                   Text(
                     card.nameKo,
                     style: AppTextStyles.body.copyWith(
-                      color: isUnlocked ? Colors.white : Colors.grey[600],
+                      color: isUnlocked ? MGColors.textHighEmphasis : MGColors.common,
                       fontWeight: FontWeight.bold,
                     ),
                     textAlign: TextAlign.center,
@@ -222,7 +223,7 @@ class _DeckScreenState extends State<DeckScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Icon(Icons.timer, size: 14, color: Colors.white70),
+                        const Icon(Icons.timer, size: 14, color: MGColors.textMediumEmphasis),
                         const SizedBox(width: 4),
                         Text(
                           '${card.baseCooldown}s',
@@ -231,11 +232,11 @@ class _DeckScreenState extends State<DeckScreen> {
                       ],
                     ),
                   ] else ...[
-                    const Icon(Icons.lock, color: Colors.white54, size: 32),
+                    const Icon(Icons.lock, color: MGColors.textDisabled, size: 32),
                     const SizedBox(height: 4),
                     Text(
                       '잠김',
-                      style: AppTextStyles.caption.copyWith(color: Colors.white54),
+                      style: AppTextStyles.caption.copyWith(color: MGColors.textDisabled),
                     ),
                   ],
                 ],
@@ -248,10 +249,10 @@ class _DeckScreenState extends State<DeckScreen> {
                 child: Container(
                   padding: const EdgeInsets.all(4),
                   decoration: const BoxDecoration(
-                    color: Colors.green,
+                    color: MGColors.success,
                     shape: BoxShape.circle,
                   ),
-                  child: const Icon(Icons.check, color: Colors.white, size: 16),
+                  child: const Icon(Icons.check, color: MGColors.textHighEmphasis, size: 16),
                 ),
               ),
           ],
@@ -273,13 +274,13 @@ class _DeckScreenState extends State<DeckScreen> {
   Color _getCardRarityColor(CardRarity rarity) {
     switch (rarity) {
       case CardRarity.common:
-        return Colors.grey;
+        return MGColors.common;
       case CardRarity.rare:
-        return Colors.blue;
+        return MGColors.info;
       case CardRarity.epic:
-        return Colors.purple;
+        return MGColors.gem;
       case CardRarity.legendary:
-        return Colors.amber;
+        return MGColors.gold;
     }
   }
 

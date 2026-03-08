@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mg_common_game/core/ui/theme/app_colors.dart';
 import 'package:mg_common_game/core/ui/theme/app_text_styles.dart';
+import 'package:mg_common_game/core/ui/theme/mg_colors.dart';
 
 /// Race results screen shown after completing a race
 class RaceResultsScreen extends StatelessWidget {
@@ -24,7 +25,7 @@ class RaceResultsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black.withValues(alpha: 0.9),
+      backgroundColor: MGColors.backgroundDarkDark.withValues(alpha: 0.9),
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
@@ -79,10 +80,10 @@ class RaceResultsScreen extends StatelessWidget {
             : '완주!';
 
     final color = position == 1
-        ? Colors.amber
+        ? MGColors.gold
         : position <= 3
-            ? Colors.orange
-            : Colors.grey;
+            ? MGColors.warning
+            : MGColors.common;
 
     return Text(
       title,
@@ -146,19 +147,19 @@ class RaceResultsScreen extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                 decoration: BoxDecoration(
-                  color: Colors.amber.withValues(alpha: 0.2),
+                  color: MGColors.gold.withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: Colors.amber),
+                  border: Border.all(color: MGColors.gold),
                 ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const Icon(Icons.star, color: Colors.amber, size: 16),
+                    const Icon(Icons.star, color: MGColors.gold, size: 16),
                     const SizedBox(width: 4),
                     Text(
                       '신기록!',
                       style: TextStyle(
-                        color: Colors.amber,
+                        color: MGColors.gold,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -181,9 +182,9 @@ class RaceResultsScreen extends StatelessWidget {
           children: [
             Text('보상', style: AppTextStyles.header2),
             const SizedBox(height: 16),
-            _buildRewardRow(Icons.monetization_on, '코인', '+$coinsEarned', Colors.yellow),
+            _buildRewardRow(Icons.monetization_on, '코인', '+$coinsEarned', MGColors.gold),
             const SizedBox(height: 12),
-            _buildRewardRow(Icons.trending_up, '경험치', '+$experienceEarned', Colors.blue),
+            _buildRewardRow(Icons.trending_up, '경험치', '+$experienceEarned', MGColors.info),
           ],
         ),
       ),
@@ -283,13 +284,13 @@ class RaceResultsScreen extends StatelessWidget {
   Color _getPositionColor() {
     switch (position) {
       case 1:
-        return Colors.amber; // Gold
+        return MGColors.gold; // Gold
       case 2:
-        return Colors.grey[400]!; // Silver
+        return MGColors.common; // Silver
       case 3:
-        return Colors.orange[300]!; // Bronze
+        return MGColors.warning; // Bronze
       default:
-        return Colors.grey; // Default
+        return MGColors.common; // Default
     }
   }
 

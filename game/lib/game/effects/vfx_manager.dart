@@ -3,6 +3,7 @@ import 'package:flame/components.dart';
 import 'package:flame/effects.dart';
 import 'package:flame/particles.dart';
 import 'package:flutter/material.dart';
+import 'package:mg_common_game/core/ui/theme/mg_colors.dart';
 
 /// VFX Manager for Cartoon Racing RPG (MG-0018)
 /// Racing + Card + Idle 게임 전용 이펙트 관리자
@@ -12,8 +13,8 @@ class VfxManager extends Component with HasGameRef {
 
   // Racing Effects
   void showBoostStart(Vector2 position) {
-    gameRef.add(_createTrailEffect(position: position, color: Colors.orange, length: 60));
-    gameRef.add(_createSparkleEffect(position: position, color: Colors.yellow, count: 12));
+    gameRef.add(_createTrailEffect(position: position, color: MGColors.warning, length: 60));
+    gameRef.add(_createSparkleEffect(position: position, color: MGColors.gold, count: 12));
     gameRef.add(_BoostText(position: position));
   }
 
@@ -22,27 +23,27 @@ class VfxManager extends Component with HasGameRef {
   }
 
   void showDrift(Vector2 position) {
-    gameRef.add(_createSmokeEffect(position: position, count: 8, color: Colors.grey.shade400));
-    gameRef.add(_createSparkleEffect(position: position, color: Colors.white, count: 5));
+    gameRef.add(_createSmokeEffect(position: position, count: 8, color: MGColors.common));
+    gameRef.add(_createSparkleEffect(position: position, color: MGColors.textHighEmphasis, count: 5));
   }
 
   void showCollision(Vector2 position) {
-    gameRef.add(_createExplosionEffect(position: position, color: Colors.orange, count: 20, radius: 50));
-    gameRef.add(_createSmokeEffect(position: position, count: 10, color: Colors.grey.shade600));
+    gameRef.add(_createExplosionEffect(position: position, color: MGColors.warning, count: 20, radius: 50));
+    gameRef.add(_createSmokeEffect(position: position, count: 10, color: MGColors.common));
     _triggerScreenShake(intensity: 6, duration: 0.3);
   }
 
   void showRaceFinish(Vector2 position, int placement) {
     Color color; String text;
     switch (placement) {
-      case 1: color = Colors.amber; text = '1ST!'; break;
-      case 2: color = Colors.grey.shade400; text = '2ND'; break;
-      case 3: color = Colors.brown.shade400; text = '3RD'; break;
-      default: color = Colors.white; text = '${placement}TH';
+      case 1: color = MGColors.gold; text = '1ST!'; break;
+      case 2: color = MGColors.common; text = '2ND'; break;
+      case 3: color = MGColors.warning; text = '3RD'; break;
+      default: color = MGColors.textHighEmphasis; text = '${placement}TH';
     }
     gameRef.add(_createExplosionEffect(position: position, color: color, count: placement == 1 ? 40 : 25, radius: 70));
     if (placement <= 3) {
-      gameRef.add(_createSparkleEffect(position: position, color: Colors.white, count: 15));
+      gameRef.add(_createSparkleEffect(position: position, color: MGColors.textHighEmphasis, count: 15));
     }
     gameRef.add(_PlacementText(position: position, text: text, color: color));
   }
@@ -59,8 +60,8 @@ class VfxManager extends Component with HasGameRef {
 
   // Upgrade Effects
   void showVehicleUpgrade(Vector2 position) {
-    gameRef.add(_createExplosionEffect(position: position, color: Colors.amber, count: 30, radius: 60));
-    gameRef.add(_createSparkleEffect(position: position, color: Colors.yellow, count: 15));
+    gameRef.add(_createExplosionEffect(position: position, color: MGColors.gold, count: 30, radius: 60));
+    gameRef.add(_createSparkleEffect(position: position, color: MGColors.gold, count: 15));
     gameRef.add(_UpgradeText(position: position));
   }
 
@@ -68,12 +69,12 @@ class VfxManager extends Component with HasGameRef {
     for (int i = 0; i < 5; i++) {
       Future.delayed(Duration(milliseconds: i * 120), () {
         if (!isMounted) return;
-        gameRef.add(_createSparkleEffect(position: centerPosition + Vector2((_random.nextDouble() - 0.5) * 120, (_random.nextDouble() - 0.5) * 80), color: [Colors.red, Colors.orange, Colors.yellow, Colors.green, Colors.blue][i], count: 10));
+        gameRef.add(_createSparkleEffect(position: centerPosition + Vector2((_random.nextDouble() - 0.5) * 120, (_random.nextDouble() - 0.5) * 80), color: [MGColors.error, MGColors.warning, MGColors.gold, MGColors.success, MGColors.info][i], count: 10));
       });
     }
   }
 
-  void showNumberPopup(Vector2 position, String text, {Color color = Colors.white}) {
+  void showNumberPopup(Vector2 position, String text, {Color color = MGColors.textHighEmphasis}) {
     gameRef.add(_NumberPopup(position: position, text: text, color: color));
   }
 
@@ -144,7 +145,7 @@ class VfxManager extends Component with HasGameRef {
 }
 
 class _BoostText extends TextComponent {
-  _BoostText({required Vector2 position}) : super(text: 'BOOST!', position: position + Vector2(0, -30), anchor: Anchor.center, textRenderer: TextPaint(style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.orange, shadows: [Shadow(color: Colors.red, blurRadius: 10)])));
+  _BoostText({required Vector2 position}) : super(text: 'BOOST!', position: position + Vector2(0, -30), anchor: Anchor.center, textRenderer: TextPaint(style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: MGColors.warning, shadows: [Shadow(color: MGColors.error, blurRadius: 10)])));
   @override Future<void> onLoad() async { await super.onLoad(); scale = Vector2.all(0.5); add(ScaleEffect.to(Vector2.all(1.1), EffectController(duration: 0.2, curve: Curves.elasticOut))); add(MoveByEffect(Vector2(0, -20), EffectController(duration: 0.8, curve: Curves.easeOut))); add(OpacityEffect.fadeOut(EffectController(duration: 0.8, startDelay: 0.3))); add(RemoveEffect(delay: 1.1)); }
 }
 
@@ -154,11 +155,11 @@ class _PlacementText extends TextComponent {
 }
 
 class _UpgradeText extends TextComponent {
-  _UpgradeText({required Vector2 position}) : super(text: 'UPGRADE!', position: position + Vector2(0, -35), anchor: Anchor.center, textRenderer: TextPaint(style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.amber, shadows: [Shadow(color: Colors.orange, blurRadius: 10)])));
+  _UpgradeText({required Vector2 position}) : super(text: 'UPGRADE!', position: position + Vector2(0, -35), anchor: Anchor.center, textRenderer: TextPaint(style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: MGColors.gold, shadows: [Shadow(color: MGColors.warning, blurRadius: 10)])));
   @override Future<void> onLoad() async { await super.onLoad(); scale = Vector2.all(0.5); add(ScaleEffect.to(Vector2.all(1.0), EffectController(duration: 0.3, curve: Curves.elasticOut))); add(MoveByEffect(Vector2(0, -20), EffectController(duration: 1.0, curve: Curves.easeOut))); add(OpacityEffect.fadeOut(EffectController(duration: 1.0, startDelay: 0.5))); add(RemoveEffect(delay: 1.5)); }
 }
 
 class _NumberPopup extends TextComponent {
-  _NumberPopup({required Vector2 position, required String text, required Color color}) : super(text: text, position: position, anchor: Anchor.center, textRenderer: TextPaint(style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: color, shadows: const [Shadow(color: Colors.black, blurRadius: 4, offset: Offset(1, 1))])));
+  _NumberPopup({required Vector2 position, required String text, required Color color}) : super(text: text, position: position, anchor: Anchor.center, textRenderer: TextPaint(style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: color, shadows: const [Shadow(color: MGColors.backgroundDarkDark, blurRadius: 4, offset: Offset(1, 1))])));
   @override Future<void> onLoad() async { await super.onLoad(); add(MoveByEffect(Vector2(0, -25), EffectController(duration: 0.6, curve: Curves.easeOut))); add(OpacityEffect.fadeOut(EffectController(duration: 0.6, startDelay: 0.2))); add(RemoveEffect(delay: 0.8)); }
 }

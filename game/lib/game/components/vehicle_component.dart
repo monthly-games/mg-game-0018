@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flame/components.dart';
 import '../../features/vehicles/vehicle_data.dart';
 import '../../features/cards/card_data.dart';
+import 'package:mg_common_game/core/ui/theme/mg_colors.dart';
 
 /// Vehicle physics component for racing gameplay
 class VehicleComponent extends PositionComponent {
@@ -139,7 +140,7 @@ class VehicleComponent extends PositionComponent {
     );
 
     // Front indicator
-    final frontPaint = Paint()..color = const Color(0xFFFFFF00);
+    final frontPaint = Paint()..color = MGColors.gold;
     canvas.drawRect(
       Rect.fromLTWH(size.x / 2 - 5, 0, 10, 10),
       frontPaint,

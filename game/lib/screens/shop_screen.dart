@@ -6,6 +6,7 @@ import 'package:mg_common_game/core/ui/theme/app_text_styles.dart';
 import '../features/player/player_manager.dart';
 import '../features/cards/card_data.dart';
 import 'dart:math';
+import 'package:mg_common_game/core/ui/theme/mg_colors.dart';
 
 /// Shop screen for purchasing items
 class ShopScreen extends StatelessWidget {
@@ -64,9 +65,9 @@ class ShopScreen extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            _buildCurrencyDisplay(Icons.monetization_on, '코인', player.coins, Colors.yellow),
-            _buildCurrencyDisplay(Icons.diamond, '다이아몬드', player.diamonds, Colors.cyan),
-            _buildCurrencyDisplay(Icons.local_gas_station, '연료', player.fuel, Colors.orange),
+            _buildCurrencyDisplay(Icons.monetization_on, '코인', player.coins, MGColors.gold),
+            _buildCurrencyDisplay(Icons.diamond, '다이아몬드', player.diamonds, MGColors.energy),
+            _buildCurrencyDisplay(Icons.local_gas_station, '연료', player.fuel, MGColors.warning),
           ],
         ),
       ),
@@ -102,7 +103,7 @@ class ShopScreen extends StatelessWidget {
           title: '${offer['fuel']} 연료',
           description: '연료 ${offer['fuel']} 충전',
           icon: Icons.local_gas_station,
-          iconColor: Colors.orange,
+          iconColor: MGColors.warning,
           price: offer['coins']!,
           currency: '코인',
           currencyIcon: Icons.monetization_on,
@@ -183,7 +184,7 @@ class ShopScreen extends StatelessWidget {
           title: '${offer['diamonds']} 다이아몬드',
           description: '프리미엄 재화',
           icon: Icons.diamond,
-          iconColor: Colors.cyan,
+          iconColor: MGColors.energy,
           price: offer['coins']!,
           currency: '코인',
           currencyIcon: Icons.monetization_on,
@@ -241,12 +242,12 @@ class ShopScreen extends StatelessWidget {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(currencyIcon, size: 16, color: Colors.white),
+                      Icon(currencyIcon, size: 16, color: MGColors.textHighEmphasis),
                       const SizedBox(width: 4),
                       Text(
                         '$price',
                         style: const TextStyle(
-                          color: Colors.white,
+                          color: MGColors.textHighEmphasis,
                           fontWeight: FontWeight.bold,
                           fontSize: 14,
                         ),
@@ -398,13 +399,13 @@ class ShopScreen extends StatelessWidget {
   Color _getCardRarityColor(CardRarity rarity) {
     switch (rarity) {
       case CardRarity.common:
-        return Colors.grey;
+        return MGColors.common;
       case CardRarity.rare:
-        return Colors.blue;
+        return MGColors.info;
       case CardRarity.epic:
-        return Colors.purple;
+        return MGColors.gem;
       case CardRarity.legendary:
-        return Colors.amber;
+        return MGColors.gold;
     }
   }
 

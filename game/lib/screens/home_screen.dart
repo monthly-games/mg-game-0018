@@ -13,6 +13,7 @@ import 'garage_screen.dart';
 import 'deck_screen.dart';
 import 'shop_screen.dart';
 import 'league_screen.dart';
+import 'package:mg_common_game/core/ui/theme/mg_colors.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -73,18 +74,18 @@ class _HomeScreenState extends State<HomeScreen> {
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: Colors.blue.withValues(alpha: 0.2),
+                  color: MGColors.info.withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: Colors.blue),
+                  border: Border.all(color: MGColors.info),
                 ),
                 child: Row(
                   children: [
-                    const Icon(Icons.info, color: Colors.blue, size: 20),
+                    const Icon(Icons.info, color: MGColors.info, size: 20),
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(
                         '연료는 1분에 1씩 자동 회복됩니다!',
-                        style: AppTextStyles.caption.copyWith(color: Colors.blue),
+                        style: AppTextStyles.caption.copyWith(color: MGColors.info),
                       ),
                     ),
                   ],
@@ -191,11 +192,11 @@ class _HomeScreenState extends State<HomeScreen> {
                     padding: const EdgeInsets.all(16),
                     child: Column(
                       children: [
-                        _buildCurrencyRow(Icons.monetization_on, '코인', player.coins, Colors.yellow),
+                        _buildCurrencyRow(Icons.monetization_on, '코인', player.coins, MGColors.gold),
                         const SizedBox(height: 8),
-                        _buildCurrencyRow(Icons.diamond, '다이아몬드', player.diamonds, Colors.cyan),
+                        _buildCurrencyRow(Icons.diamond, '다이아몬드', player.diamonds, MGColors.energy),
                         const SizedBox(height: 8),
-                        _buildCurrencyRow(Icons.local_gas_station, '연료', player.fuel, Colors.orange),
+                        _buildCurrencyRow(Icons.local_gas_station, '연료', player.fuel, MGColors.warning),
                       ],
                     ),
                   ),

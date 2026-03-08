@@ -5,6 +5,7 @@ import 'garage_screen.dart';
 import 'race_screen.dart';
 import '../core/game_manager.dart';
 import '../core/audio_manager.dart';
+import 'package:mg_common_game/core/ui/theme/mg_colors.dart';
 
 class MainScreen extends StatelessWidget {
   const MainScreen({super.key});
@@ -96,8 +97,8 @@ class MainScreen extends StatelessWidget {
                       vertical: 20,
                     ),
                     textStyle: const TextStyle(fontSize: 18),
-                    backgroundColor: Colors.orange,
-                    foregroundColor: Colors.white,
+                    backgroundColor: MGColors.warning,
+                    foregroundColor: MGColors.textHighEmphasis,
                   ),
                 ),
                 const SizedBox(height: 40),
@@ -112,14 +113,14 @@ class MainScreen extends StatelessWidget {
                           label: 'Coins',
                           value: GameManager().economy.coins,
                           icon: Icons.monetization_on,
-                          color: Colors.amber,
+                          color: MGColors.gold,
                         ),
                         const SizedBox(width: 20),
                         _AnimatedCount(
                           label: 'Gems',
                           value: GameManager().economy.gems,
                           icon: Icons.diamond,
-                          color: Colors.blue,
+                          color: MGColors.info,
                         ),
                       ],
                     );

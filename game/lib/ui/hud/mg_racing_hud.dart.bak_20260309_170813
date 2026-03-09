@@ -20,7 +20,6 @@ class MGRacingHud extends StatelessWidget {
   final Duration? bestLapTime;
   final VoidCallback? onPause;
   final VoidCallback? onBoost;
-  final VoidCallback? onDailyHub;
 
   const MGRacingHud({
     super.key,
@@ -36,7 +35,6 @@ class MGRacingHud extends StatelessWidget {
     this.bestLapTime,
     this.onPause,
     this.onBoost,
-    this.onDailyHub,
   });
 
   @override
@@ -57,13 +55,6 @@ class MGRacingHud extends StatelessWidget {
                 Expanded(child: _buildLapInfo()),
                 SizedBox(width: MGSpacing.sm),
                 // 오른쪽: 일시정지
-                if (onDailyHub != null)
-                  MGIconButton(
-                    icon: Icons.calendar_today,
-                    onPressed: onDailyHub!,
-                    buttonSize: MGIconButtonSize.small,
-                  ),
-                const SizedBox(width: MGSpacing.xs),
                 if (onPause != null)
                   MGIconButton(
                     icon: Icons.pause,

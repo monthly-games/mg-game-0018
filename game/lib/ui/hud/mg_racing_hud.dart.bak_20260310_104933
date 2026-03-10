@@ -21,9 +21,6 @@ class MGRacingHud extends StatelessWidget {
   final VoidCallback? onPause;
   final VoidCallback? onBoost;
   final VoidCallback? onDailyHub;
-  final VoidCallback? onGuildWar;
-  final VoidCallback? onTournament;
-  final VoidCallback? onSeasonalEvent;
 
   const MGRacingHud({
     super.key,
@@ -40,9 +37,6 @@ class MGRacingHud extends StatelessWidget {
     this.onPause,
     this.onBoost,
     this.onDailyHub,
-    this.onGuildWar,
-    this.onTournament,
-    this.onSeasonalEvent,
   });
 
   @override
@@ -63,27 +57,6 @@ class MGRacingHud extends StatelessWidget {
                 Expanded(child: _buildLapInfo()),
                 SizedBox(width: MGSpacing.sm),
                 // 오른쪽: 일시정지
-                if (onGuildWar != null)
-                  MGIconButton(
-                    icon: Icons.shield,
-                    onPressed: onGuildWar!,
-                    buttonSize: MGIconButtonSize.small,
-                  ),
-                const SizedBox(width: MGSpacing.xs),
-                if (onTournament != null)
-                  MGIconButton(
-                    icon: Icons.emoji_events,
-                    onPressed: onTournament!,
-                    buttonSize: MGIconButtonSize.small,
-                  ),
-                const SizedBox(width: MGSpacing.xs),
-                if (onSeasonalEvent != null)
-                  MGIconButton(
-                    icon: Icons.celebration,
-                    onPressed: onSeasonalEvent!,
-                    buttonSize: MGIconButtonSize.small,
-                  ),
-                const SizedBox(width: MGSpacing.xs),
                 if (onDailyHub != null)
                   MGIconButton(
                     icon: Icons.calendar_today,

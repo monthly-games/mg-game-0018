@@ -375,7 +375,7 @@ class Tracks {
   static final crystal1 = Track(
     id: 'crystal_1',
     nameKo: '크리스탈 동굴',
-    type: TrackType.mountain,
+    type: TrackType.snow,
     requiredLeague: 5,
     unlockCost: 12000,
     size: Vector2(1600, 1100),

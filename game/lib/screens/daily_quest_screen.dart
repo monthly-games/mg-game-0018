@@ -327,7 +327,7 @@ class _DailyQuestScreenState extends State<DailyQuestScreen> {
             value: quest.progressPercentage,
             valueColor: isClaimed || isClaimable
                 ? MGColors.success
-                : MGColors.primaryActionAction,
+                : MGColors.primaryAction,
             height: 6,
             borderRadius: 3,
           ),
@@ -385,14 +385,14 @@ class _DailyQuestScreenState extends State<DailyQuestScreen> {
       decoration: BoxDecoration(
         color: isClaimed
             ? MGColors.success.withValues(alpha: 0.2)
-            : MGColors.primaryActionAction.withValues(alpha: 0.15),
+            : MGColors.primaryAction.withValues(alpha: 0.15),
         borderRadius: BorderRadius.circular(MGSpacing.xs),
       ),
       child: Icon(
         isClaimed
             ? Icons.check_circle_rounded
             : MGIcons.navQuest,
-        color: isClaimed ? MGColors.success : MGColors.primaryActionAction,
+        color: isClaimed ? MGColors.success : MGColors.primaryAction,
         size: MGIcons.listItemSize,
       ),
     );

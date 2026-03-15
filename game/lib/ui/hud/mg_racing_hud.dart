@@ -95,7 +95,7 @@ class MGRacingHud extends StatelessWidget {
                   MGIconButton(
                     icon: Icons.pause,
                     onPressed: onPause!,
-                    size: MGIconButtonSize.small,
+                    buttonSize: MGIconButtonSize.small,
                   ),
               ],
             ),
@@ -154,14 +154,14 @@ class MGRacingHud extends StatelessWidget {
           Text(
             _getPositionSuffix(position),
             style: MGTextStyles.h2.copyWith(
-              color: position <= 3 ? MGColors.backgroundDarkDark.withValues(alpha: 0.87) : MGColors.textHighEmphasis,
+              color: position <= 3 ? MGColors.backgroundDark.withValues(alpha: 0.87) : MGColors.textHighEmphasis,
               fontWeight: FontWeight.bold,
             ),
           ),
           Text(
             '/ $totalRacers',
             style: MGTextStyles.caption.copyWith(
-              color: position <= 3 ? MGColors.backgroundDarkDark.withValues(alpha: 0.54) : MGColors.textMediumEmphasis,
+              color: position <= 3 ? MGColors.backgroundDark.withValues(alpha: 0.54) : MGColors.textMediumEmphasis,
             ),
           ),
         ],
@@ -200,7 +200,7 @@ class MGRacingHud extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.timer, color: MGColors.primaryActionAction, size: 16),
+              Icon(Icons.timer, color: MGColors.primaryAction, size: 16),
               SizedBox(width: MGSpacing.xxs),
               Text(
                 _formatDuration(raceTime),
@@ -271,7 +271,7 @@ class MGRacingHud extends StatelessWidget {
               value: speedRatio,
               height: 8,
               backgroundColor: MGColors.common.withValues(alpha: 0.3),
-              progressColor: _getSpeedColor(speedRatio),
+              valueColor: _getSpeedColor(speedRatio),
             ),
           ),
         ],
@@ -339,8 +339,8 @@ class MGRacingHud extends StatelessWidget {
               child: MGLinearProgress(
                 value: boostRatio,
                 height: 10,
-                backgroundColor: MGColors.backgroundDarkDark.withValues(alpha: 0.26),
-                progressColor: canBoost ? MGColors.gold : MGColors.common,
+                backgroundColor: MGColors.backgroundDark.withValues(alpha: 0.26),
+                valueColor: canBoost ? MGColors.gold : MGColors.common,
               ),
             ),
           ],

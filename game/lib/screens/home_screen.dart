@@ -5,7 +5,6 @@ import 'package:mg_common_game/core/ui/theme/app_text_styles.dart';
 
 import '../features/player/player_manager.dart';
 import '../features/save/save_manager.dart';
-import '../game/tracks/track_data.dart';
 import 'achievement_screen.dart';
 import 'daily_quest_screen.dart';
 import 'race_screen.dart';
@@ -358,18 +357,12 @@ class _HomeScreenState extends State<HomeScreen> {
     }
 
     // Get upgraded stats
-    final upgradedStats = player.getUpgradedStats(vehicle);
 
     // Start race on first available track (city1)
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => RaceScreen(
-          track: Tracks.city1,
-          vehicle: vehicle,
-          vehicleStats: upgradedStats,
-          equippedCardIds: player.equippedCardIds,
-        ),
+        builder: (context) => const RaceScreen(),
       ),
     ).then((result) async {
       // Handle race results

@@ -7,29 +7,29 @@ import 'package:mg_common_game/core/ui/theme/mg_colors.dart';
 
 /// VFX Manager for Cartoon Racing RPG (MG-0018)
 /// Racing + Card + Idle 게임 전용 이펙트 관리자
-class VfxManager extends Component with HasGameRef {
+class VfxManager extends Component with HasGameReference {
   VfxManager();
   final Random _random = Random();
 
   // Racing Effects
   void showBoostStart(Vector2 position) {
-    gameRef.add(_createTrailEffect(position: position, color: MGColors.warning, length: 60));
-    gameRef.add(_createSparkleEffect(position: position, color: MGColors.gold, count: 12));
-    gameRef.add(_BoostText(position: position));
+    game.add(_createTrailEffect(position: position, color: MGColors.warning, length: 60));
+    game.add(_createSparkleEffect(position: position, color: MGColors.gold, count: 12));
+    game.add(_BoostText(position: position));
   }
 
   void showSpeedTrail(Vector2 position, Color vehicleColor) {
-    gameRef.add(_createTrailEffect(position: position, color: vehicleColor.withValues(alpha: 0.6), length: 40));
+    game.add(_createTrailEffect(position: position, color: vehicleColor.withValues(alpha: 0.6), length: 40));
   }
 
   void showDrift(Vector2 position) {
-    gameRef.add(_createSmokeEffect(position: position, count: 8, color: MGColors.common));
-    gameRef.add(_createSparkleEffect(position: position, color: MGColors.textHighEmphasis, count: 5));
+    game.add(_createSmokeEffect(position: position, count: 8, color: MGColors.common));
+    game.add(_createSparkleEffect(position: position, color: MGColors.textHighEmphasis, count: 5));
   }
 
   void showCollision(Vector2 position) {
-    gameRef.add(_createExplosionEffect(position: position, color: MGColors.warning, count: 20, radius: 50));
-    gameRef.add(_createSmokeEffect(position: position, count: 10, color: MGColors.common));
+    game.add(_createExplosionEffect(position: position, color: MGColors.warning, count: 20, radius: 50));
+    game.add(_createSmokeEffect(position: position, count: 10, color: MGColors.common));
     _triggerScreenShake(intensity: 6, duration: 0.3);
   }
 
@@ -41,46 +41,46 @@ class VfxManager extends Component with HasGameRef {
       case 3: color = MGColors.warning; text = '3RD'; break;
       default: color = MGColors.textHighEmphasis; text = '${placement}TH';
     }
-    gameRef.add(_createExplosionEffect(position: position, color: color, count: placement == 1 ? 40 : 25, radius: 70));
+    game.add(_createExplosionEffect(position: position, color: color, count: placement == 1 ? 40 : 25, radius: 70));
     if (placement <= 3) {
-      gameRef.add(_createSparkleEffect(position: position, color: MGColors.textHighEmphasis, count: 15));
+      game.add(_createSparkleEffect(position: position, color: MGColors.textHighEmphasis, count: 15));
     }
-    gameRef.add(_PlacementText(position: position, text: text, color: color));
+    game.add(_PlacementText(position: position, text: text, color: color));
   }
 
   // Card/Ability Effects
   void showAbilityActivate(Vector2 position, Color abilityColor) {
-    gameRef.add(_createConvergeEffect(position: position, color: abilityColor));
-    gameRef.add(_createGroundCircle(position: position, color: abilityColor));
+    game.add(_createConvergeEffect(position: position, color: abilityColor));
+    game.add(_createGroundCircle(position: position, color: abilityColor));
   }
 
   void showAbilityHit(Vector2 targetPosition, Color abilityColor) {
-    gameRef.add(_createExplosionEffect(position: targetPosition, color: abilityColor, count: 18, radius: 45));
+    game.add(_createExplosionEffect(position: targetPosition, color: abilityColor, count: 18, radius: 45));
   }
 
   // Upgrade Effects
   void showVehicleUpgrade(Vector2 position) {
-    gameRef.add(_createExplosionEffect(position: position, color: MGColors.gold, count: 30, radius: 60));
-    gameRef.add(_createSparkleEffect(position: position, color: MGColors.gold, count: 15));
-    gameRef.add(_UpgradeText(position: position));
+    game.add(_createExplosionEffect(position: position, color: MGColors.gold, count: 30, radius: 60));
+    game.add(_createSparkleEffect(position: position, color: MGColors.gold, count: 15));
+    game.add(_UpgradeText(position: position));
   }
 
   void showTrackComplete(Vector2 centerPosition) {
     for (int i = 0; i < 5; i++) {
       Future.delayed(Duration(milliseconds: i * 120), () {
         if (!isMounted) return;
-        gameRef.add(_createSparkleEffect(position: centerPosition + Vector2((_random.nextDouble() - 0.5) * 120, (_random.nextDouble() - 0.5) * 80), color: [MGColors.error, MGColors.warning, MGColors.gold, MGColors.success, MGColors.info][i], count: 10));
+        game.add(_createSparkleEffect(position: centerPosition + Vector2((_random.nextDouble() - 0.5) * 120, (_random.nextDouble() - 0.5) * 80), color: [MGColors.error, MGColors.warning, MGColors.gold, MGColors.success, MGColors.info][i], count: 10));
       });
     }
   }
 
   void showNumberPopup(Vector2 position, String text, {Color color = MGColors.textHighEmphasis}) {
-    gameRef.add(_NumberPopup(position: position, text: text, color: color));
+    game.add(_NumberPopup(position: position, text: text, color: color));
   }
 
   void _triggerScreenShake({double intensity = 5, double duration = 0.3}) {
-    if (gameRef.camera.viewfinder.children.isNotEmpty) {
-      gameRef.camera.viewfinder.add(MoveByEffect(Vector2(intensity, 0), EffectController(duration: duration / 10, repeatCount: (duration * 10).toInt(), alternate: true)));
+    if (game.camera.viewfinder.children.isNotEmpty) {
+      game.camera.viewfinder.add(MoveByEffect(Vector2(intensity, 0), EffectController(duration: duration / 10, repeatCount: (duration * 10).toInt(), alternate: true)));
     }
   }
 
@@ -119,7 +119,11 @@ class VfxManager extends Component with HasGameRef {
       final angle = _random.nextDouble() * 2 * pi; final speed = 50 + _random.nextDouble() * 40;
       return AcceleratedParticle(position: position.clone(), speed: Vector2(cos(angle), sin(angle)) * speed, acceleration: Vector2(0, 40), child: ComputedParticle(renderer: (canvas, particle) {
         final opacity = (1.0 - particle.progress).clamp(0.0, 1.0); final size = 3 * (1.0 - particle.progress * 0.5);
-        final path = Path(); for (int j = 0; j < 4; j++) { final a = (j * pi / 2); if (j == 0) path.moveTo(cos(a) * size, sin(a) * size); else path.lineTo(cos(a) * size, sin(a) * size); } path.close();
+        final path = Path(); for (int j = 0; j < 4; j++) { final a = (j * pi / 2); if (j == 0) {
+          path.moveTo(cos(a) * size, sin(a) * size);
+        } else {
+          path.lineTo(cos(a) * size, sin(a) * size);
+        } } path.close();
         canvas.drawPath(path, Paint()..color = color.withValues(alpha: opacity));
       }));
     }));
@@ -160,6 +164,6 @@ class _UpgradeText extends TextComponent {
 }
 
 class _NumberPopup extends TextComponent {
-  _NumberPopup({required Vector2 position, required String text, required Color color}) : super(text: text, position: position, anchor: Anchor.center, textRenderer: TextPaint(style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: color, shadows: const [Shadow(color: MGColors.backgroundDarkDark, blurRadius: 4, offset: Offset(1, 1))])));
+  _NumberPopup({required Vector2 position, required String text, required Color color}) : super(text: text, position: position, anchor: Anchor.center, textRenderer: TextPaint(style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: color, shadows: const [Shadow(color: MGColors.backgroundDark, blurRadius: 4, offset: Offset(1, 1))])));
   @override Future<void> onLoad() async { await super.onLoad(); add(MoveByEffect(Vector2(0, -25), EffectController(duration: 0.6, curve: Curves.easeOut))); add(OpacityEffect.fadeOut(EffectController(duration: 0.6, startDelay: 0.2))); add(RemoveEffect(delay: 0.8)); }
 }

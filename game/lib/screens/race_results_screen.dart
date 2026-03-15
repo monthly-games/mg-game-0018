@@ -25,7 +25,7 @@ class RaceResultsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: MGColors.backgroundDarkDark.withValues(alpha: 0.9),
+      backgroundColor: MGColors.backgroundDark.withValues(alpha: 0.9),
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(

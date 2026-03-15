@@ -31,7 +31,6 @@ class PlayerManager extends ChangeNotifier {
   // Getters
   int get coins => _coins;
   int get diamonds => _diamonds;
-  int get fuel => _fuel;
   String get selectedVehicleId => _selectedVehicleId;
   List<String> get equippedCardIds => List.unmodifiable(_equippedCardIds);
   Set<String> get unlockedVehicles => Set.unmodifiable(_unlockedVehicles);
@@ -97,7 +96,6 @@ class PlayerManager extends ChangeNotifier {
   }
 
   /// Get fuel with regeneration applied
-  @override
   int get fuel {
     _updateFuelRegeneration();
     return _fuel;

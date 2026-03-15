@@ -1,24 +1,7 @@
+import 'package:mg_common_game/mg_common_game.dart' hide AudioManager;
 import 'package:flutter/material.dart';
-import 'package:mg_common_game/core/ui/screens/seasonal_event_screen.dart';
-import 'package:mg_common_game/core/ui/screens/tournament_screen.dart';
-import 'package:mg_common_game/core/ui/screens/guild_war_screen.dart';
-import 'package:mg_common_game/systems/events/seasonal_content_manager.dart';
-import 'package:mg_common_game/systems/competitive/tournament_manager.dart';
-import 'package:mg_common_game/systems/social/guild_war_manager.dart';
-import 'package:mg_common_game/core/ui/screens/daily_hub_screen.dart';
-import 'package:mg_common_game/systems/retention/daily_challenge_manager.dart';
-import 'package:mg_common_game/systems/retention/streak_manager.dart';
-import 'package:mg_common_game/systems/retention/login_rewards_manager.dart';
-import 'package:flutter/foundation.dart';
-import 'package:mg_common_game/systems/systems.dart';
-import 'package:mg_common_game/systems/progression/achievement_manager.dart';
-import 'package:mg_common_game/systems/quests/daily_quest.dart';
 import 'package:flutter/services.dart';
 import 'package:get_it/get_it.dart';
-import 'package:mg_common_game/systems/progression/upgrade_manager.dart';
-import 'package:mg_common_game/core/ui/theme/mg_colors.dart';
-import 'package:mg_common_game/core/ui/typography/mg_text_styles.dart';
-import 'package:mg_common_game/core/ui/layout/mg_spacing.dart';
 import 'package:game/screens/main_screen.dart';
 import 'package:game/core/game_manager.dart';
 import 'package:game/core/audio_manager.dart';
@@ -50,7 +33,7 @@ void main() async {
     const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
       statusBarIconBrightness: Brightness.light,
-      systemNavigationBarColor: MGColors.backgroundDarkDark,
+      systemNavigationBarColor: MGColors.backgroundDark,
     ),
   );
 
@@ -274,7 +257,7 @@ class CartoonRacingApp extends StatelessWidget {
       theme: ThemeData(
         brightness: Brightness.dark,
         primaryColor: MGColors.year2Primary,
-        scaffoldBackgroundColor: MGColors.backgroundDarkDark,
+        scaffoldBackgroundColor: MGColors.backgroundDark,
         colorScheme: ColorScheme.dark(
           primary: MGColors.year2Primary,
           secondary: MGColors.year2Accent,
@@ -447,7 +430,7 @@ void _registerCollections() {
   final collection = GetIt.I<CollectionManager>();
 
   // Characters 컬렉션
-  collection.registerCollection(const Collection(
+  collection.registerCollection(Collection(
     id: 'characters',
     name: '캐릭터',
     description: '모든 캐릭터를 수집하세요',

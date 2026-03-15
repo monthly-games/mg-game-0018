@@ -12,7 +12,7 @@ import 'package:game/main.dart';
 void main() {
   testWidgets('Racing app renders correctly', (WidgetTester tester) async {
     // Build our app and trigger a frame.
-    await tester.pumpWidget(const RacingApp());
+    await tester.pumpWidget(const CartoonRacingApp());
 
     // Verify that the app renders.
     expect(find.byType(MaterialApp), findsOneWidget);

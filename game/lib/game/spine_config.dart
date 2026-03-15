@@ -12,7 +12,7 @@ const kRacerRedMeta = SpineAssetMeta(
   key: 'racer_red',
   path: 'spine/characters/racer_red',
   atlasPath: 'assets/spine/characters/racer_red/racer_red.atlas',
-  skeletonPath: 'assets/spine/characters/racer_red/racer_red.skel',
+  skeletonPath: 'assets/spine/characters/racer_red/racer_red.json',
   animations: ['idle', 'walk', 'attack', 'hit'],
   defaultAnimation: 'idle',
   defaultMix: 0.2,
@@ -25,7 +25,7 @@ const kRacerBlueMeta = SpineAssetMeta(
   path: 'spine/characters/racer_blue',
   atlasPath: 'assets/spine/characters/racer_blue/racer_blue.atlas',
   skeletonPath:
-      'assets/spine/characters/racer_blue/racer_blue.skel',
+      'assets/spine/characters/racer_blue/racer_blue.json',
   animations: ['idle', 'walk', 'attack', 'hit'],
   defaultAnimation: 'idle',
   defaultMix: 0.2,
@@ -39,7 +39,7 @@ const kRacerGreenMeta = SpineAssetMeta(
   atlasPath:
       'assets/spine/characters/racer_green/racer_green.atlas',
   skeletonPath:
-      'assets/spine/characters/racer_green/racer_green.skel',
+      'assets/spine/characters/racer_green/racer_green.json',
   animations: ['idle', 'walk', 'attack', 'hit'],
   defaultAnimation: 'idle',
   defaultMix: 0.2,

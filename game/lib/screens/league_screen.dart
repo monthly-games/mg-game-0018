@@ -397,16 +397,16 @@ class _LeagueScreenState extends State<LeagueScreen> {
         return Icons.wb_sunny;
       case TrackType.snow:
         return Icons.ac_unit;
-      case TrackType.forest:
+      case TrackType.jungle:
         return Icons.forest;
-      case TrackType.beach:
-        return Icons.beach_access;
-      case TrackType.mountain:
-        return Icons.terrain;
-      case TrackType.volcano:
+      case TrackType.volcanic:
         return Icons.local_fire_department;
       case TrackType.space:
         return Icons.rocket_launch;
+      case TrackType.underwater:
+        return Icons.water;
+      case TrackType.rainbow:
+        return Icons.auto_awesome;
     }
   }
 
@@ -418,16 +418,16 @@ class _LeagueScreenState extends State<LeagueScreen> {
         return '사막';
       case TrackType.snow:
         return '설원';
-      case TrackType.forest:
+      case TrackType.jungle:
         return '숲';
-      case TrackType.beach:
-        return '해변';
-      case TrackType.mountain:
-        return '산악';
-      case TrackType.volcano:
+      case TrackType.volcanic:
         return '화산';
       case TrackType.space:
         return '우주';
+      case TrackType.underwater:
+        return '해저';
+      case TrackType.rainbow:
+        return '무지개';
     }
   }
 

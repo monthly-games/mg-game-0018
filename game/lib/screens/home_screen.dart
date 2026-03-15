@@ -338,7 +338,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  void _startRace(BuildContext context, PlayerManager player) {
+  void _startRace(BuildContext context, PlayerManager player) async {
     // Spend fuel
     if (!player.spendFuel(10)) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -359,32 +359,30 @@ class _HomeScreenState extends State<HomeScreen> {
     // Get upgraded stats
 
     // Start race on first available track (city1)
-    Navigator.push(
+    final saveManager = Provider.of<SaveManager>(context, listen: false);
+    final messenger = ScaffoldMessenger.of(context);
+    final result = await Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => const RaceScreen(),
       ),
-    ).then((result) async {
-      // Handle race results
-      if (result != null && result is Map<String, dynamic>) {
-        final position = result['position'] as int;
-        final rewards = result['rewards'] as int;
+    );
+    // Handle race results
+    if (result != null && result is Map<String, dynamic>) {
+      final position = result['position'] as int;
+      final rewards = result['rewards'] as int;
 
-        player.addCoins(rewards);
+      player.addCoins(rewards);
 
-        // Auto-save after race
-        final saveManager = Provider.of<SaveManager>(context, listen: false);
-        await saveManager.saveGame();
+      // Auto-save after race
+      await saveManager.saveGame();
 
-        if (context.mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('레이스 완료! $position위 - 보상: $rewards 코인'),
-              duration: const Duration(seconds: 3),
-            ),
-          );
-        }
-      }
-    });
+      messenger.showSnackBar(
+        SnackBar(
+          content: Text('레이스 완료! $position위 - 보상: $rewards 코인'),
+          duration: const Duration(seconds: 3),
+        ),
+      );
+    }
   }
 }

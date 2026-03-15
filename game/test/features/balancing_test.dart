@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:game/features/racing/logic/race_engine.dart';
 import 'package:game/features/racing/models/vehicle.dart';
@@ -68,7 +69,7 @@ void main() {
         // Player should rarely win hard track without upgrades
         expect(playerWinsHard, lessThan(5));
 
-        print('Wins Easy: $playerWinsEasy/20, Wins Hard: $playerWinsHard/20');
+        debugPrint('Wins Easy: $playerWinsEasy/20, Wins Hard: $playerWinsHard/20');
       },
     );
   });

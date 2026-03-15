@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:game/features/racing/models/vehicle.dart';
 import 'package:game/features/racing/models/track.dart';
@@ -51,8 +52,8 @@ void main() {
         opponentCount: 0,
       );
 
-      print('Slow Time: ${slowResult.timeMs}ms');
-      print('Fast Time: ${fastResult.timeMs}ms');
+      debugPrint('Slow Time: ${slowResult.timeMs}ms');
+      debugPrint('Fast Time: ${fastResult.timeMs}ms');
 
       expect(fastResult.timeMs, lessThan(slowResult.timeMs));
     });
@@ -90,8 +91,8 @@ void main() {
         opponentCount: 0,
       );
 
-      print('Normal Time: ${normalResult.timeMs}ms');
-      print('Boosted Time: ${boostedResult.timeMs}ms');
+      debugPrint('Normal Time: ${normalResult.timeMs}ms');
+      debugPrint('Boosted Time: ${boostedResult.timeMs}ms');
 
       expect(boostedResult.timeMs, lessThan(normalResult.timeMs));
     });

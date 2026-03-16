@@ -9,6 +9,8 @@ import 'package:game/features/racing/logic/racing_physics.dart';
 import 'package:game/features/racing/logic/vehicle_controller.dart';
 import 'package:game/features/racing/logic/race_manager.dart';
 import 'screens/collection_screen.dart';
+import 'game/tutorial_config.dart';
+import 'game/balancing_config.dart';
 
 // ============================================================
 // Service Locator
@@ -72,6 +74,29 @@ void main() async {
   }
   _registerAchievements();
   _registerDailyQuests();
+  // ── Tutorial & Balancing ──────────────────────────────────
+  if (!GetIt.I.isRegistered<TutorialManager>()) {
+    final tutorialManager = TutorialManager();
+    await tutorialManager.initialize();
+    tutorialManager.registerTutorial(
+      kOnboardingTutorial.id,
+      kOnboardingTutorial.steps,
+    );
+    GetIt.I.registerSingleton<TutorialManager>(tutorialManager);
+  }
+  if (!GetIt.I.isRegistered<BalancingManager>()) {
+    GetIt.I.registerSingleton<BalancingManager>(
+      BalancingManager(defaultConfig: kDefaultBalancingConfig),
+    );
+  }
+  // ── Q7 DI Fix: Missing Systems ──────────────────────────
+  if (!GetIt.I.isRegistered<BattlePassManager>()) {
+    GetIt.I.registerSingleton<BattlePassManager>(BattlePassManager());
+  }
+  if (!GetIt.I.isRegistered<GachaManager>()) {
+    GetIt.I.registerSingleton<GachaManager>(GachaManager());
+  }
+
   runApp(const CartoonRacingApp());
 }
 

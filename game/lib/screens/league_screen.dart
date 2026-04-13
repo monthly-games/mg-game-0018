@@ -1,7 +1,10 @@
+import 'package:mg_common_game/core/ui/layout/mg_spacing.dart';
+import 'package:mg_common_game/core/localization/localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:mg_common_game/core/ui/theme/app_colors.dart';
-import 'package:mg_common_game/core/ui/theme/app_text_styles.dart';
+import 'package:mg_common_game/core/ui/theme/app_text_styles.dart';import 'package:mg_common_game/l10n/localization.dart';
+
 
 import '../features/player/player_manager.dart';
 import '../game/tracks/track_data.dart';
@@ -93,7 +96,7 @@ class _LeagueScreenState extends State<LeagueScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('리그'),
+        title: Text('ui_general_모든_리그'.tr),
         backgroundColor: AppColors.primary,
       ),
       body: Consumer<PlayerManager>(
@@ -104,40 +107,40 @@ class _LeagueScreenState extends State<LeagueScreen> {
               : null;
 
           return SingleChildScrollView(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(MGSpacing.md),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Current league card
                 _buildCurrentLeagueCard(currentLeague, player),
 
-                const SizedBox(height: 24),
+                const SizedBox(height: MGSpacing.lg),
 
                 // Player stats
                 Text('레이싱 기록', style: AppTextStyles.header1),
-                const SizedBox(height: 12),
+                const SizedBox(height: MGSpacing.sm),
                 _buildStatsPanel(),
 
-                const SizedBox(height: 24),
+                const SizedBox(height: MGSpacing.lg),
 
                 // Next league promotion
                 if (nextLeague != null) ...[
                   Text('다음 승급', style: AppTextStyles.header1),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: MGSpacing.sm),
                   _buildPromotionCard(nextLeague, player),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: MGSpacing.lg),
                 ],
 
                 // All leagues
                 Text('모든 리그', style: AppTextStyles.header1),
-                const SizedBox(height: 12),
+                const SizedBox(height: MGSpacing.sm),
                 _buildAllLeagues(player),
 
-                const SizedBox(height: 24),
+                const SizedBox(height: MGSpacing.lg),
 
                 // Available tracks by league
                 Text('사용 가능한 트랙', style: AppTextStyles.header1),
-                const SizedBox(height: 12),
+                const SizedBox(height: MGSpacing.sm),
                 _buildAvailableTracks(player),
               ],
             ),
@@ -155,13 +158,13 @@ class _LeagueScreenState extends State<LeagueScreen> {
           border: Border.all(color: league.color, width: 3),
           borderRadius: BorderRadius.circular(12),
         ),
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(MGSpacing.mdLg),
         child: Column(
           children: [
             Text('현재 리그', style: AppTextStyles.caption),
-            const SizedBox(height: 8),
+            const SizedBox(height: MGSpacing.xs),
             Icon(league.icon, color: league.color, size: 64),
-            const SizedBox(height: 12),
+            const SizedBox(height: MGSpacing.sm),
             Text(
               league.nameKo,
               style: AppTextStyles.header1.copyWith(
@@ -169,7 +172,7 @@ class _LeagueScreenState extends State<LeagueScreen> {
                 fontSize: 32,
               ),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: MGSpacing.xs),
             Text(
               'Level ${league.level}',
               style: AppTextStyles.body.copyWith(color: league.color),
@@ -188,7 +191,7 @@ class _LeagueScreenState extends State<LeagueScreen> {
     return Card(
       color: AppColors.panel,
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(MGSpacing.md),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
@@ -205,9 +208,9 @@ class _LeagueScreenState extends State<LeagueScreen> {
     return Column(
       children: [
         Icon(icon, size: 32, color: AppColors.primary),
-        const SizedBox(height: 8),
+        const SizedBox(height: MGSpacing.xs),
         Text(label, style: AppTextStyles.caption),
-        const SizedBox(height: 4),
+        const SizedBox(height: MGSpacing.xxs),
         Text(
           value,
           style: AppTextStyles.header2.copyWith(fontSize: 20),
@@ -223,11 +226,11 @@ class _LeagueScreenState extends State<LeagueScreen> {
     return Card(
       color: AppColors.panel,
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(MGSpacing.md),
         child: Row(
           children: [
             Icon(nextLeague.icon, color: nextLeague.color, size: 48),
-            const SizedBox(width: 16),
+            const SizedBox(width: MGSpacing.md),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -236,7 +239,7 @@ class _LeagueScreenState extends State<LeagueScreen> {
                     nextLeague.nameKo,
                     style: AppTextStyles.header2.copyWith(color: nextLeague.color),
                   ),
-                  const SizedBox(height: 4),
+                  const SizedBox(height: MGSpacing.xxs),
                   if (canPromote) ...[
                     Text(
                       '승급 가능!',
@@ -251,7 +254,7 @@ class _LeagueScreenState extends State<LeagueScreen> {
                       '필요 승수: $winsNeeded',
                       style: AppTextStyles.body,
                     ),
-                    const SizedBox(height: 4),
+                    const SizedBox(height: MGSpacing.xxs),
                     LinearProgressIndicator(
                       value: _totalWins / nextLeague.requiredWins,
                       backgroundColor: MGColors.common,
@@ -261,14 +264,14 @@ class _LeagueScreenState extends State<LeagueScreen> {
                 ],
               ),
             ),
-            const SizedBox(width: 16),
+            const SizedBox(width: MGSpacing.md),
             if (canPromote)
               ElevatedButton(
                 onPressed: () => _promoteLeague(player, nextLeague),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: nextLeague.color,
                 ),
-                child: const Text('승급'),
+                child: Text('ui_general_다음_승급'.tr),
               )
             else
               const SizedBox(width: 80),
@@ -336,12 +339,12 @@ class _LeagueScreenState extends State<LeagueScreen> {
 
         // Locked tracks
         if (lockedTracks.isNotEmpty) ...[
-          const SizedBox(height: 16),
+          const SizedBox(height: MGSpacing.md),
           Text(
             '잠긴 트랙',
             style: AppTextStyles.caption.copyWith(color: MGColors.common),
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: MGSpacing.xs),
           ...lockedTracks.map((track) => _buildTrackCard(track, false)),
         ],
       ],
@@ -438,12 +441,12 @@ class _LeagueScreenState extends State<LeagueScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('승급 축하!'),
+        title: Text('ui_general_승급_축하'.tr),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Icon(nextLeague.icon, color: nextLeague.color, size: 80),
-            const SizedBox(height: 16),
+            const SizedBox(height: MGSpacing.md),
             Text(
               nextLeague.nameKo,
               style: AppTextStyles.header1.copyWith(
@@ -451,7 +454,7 @@ class _LeagueScreenState extends State<LeagueScreen> {
                 fontSize: 28,
               ),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: MGSpacing.sm),
             Text(
               '${nextLeague.promotionReward} 코인 획득!',
               style: AppTextStyles.body.copyWith(
@@ -459,7 +462,7 @@ class _LeagueScreenState extends State<LeagueScreen> {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: MGSpacing.xs),
             Text(
               '새로운 트랙이 해금되었습니다!',
               style: AppTextStyles.caption,

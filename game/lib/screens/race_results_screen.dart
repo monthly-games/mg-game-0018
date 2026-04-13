@@ -1,3 +1,5 @@
+import 'package:mg_common_game/core/ui/layout/mg_spacing.dart';
+import 'package:mg_common_game/core/localization/localization.dart';
 import 'package:flutter/material.dart';
 import 'package:mg_common_game/core/ui/theme/app_colors.dart';
 import 'package:mg_common_game/core/ui/theme/app_text_styles.dart';
@@ -29,19 +31,19 @@ class RaceResultsScreen extends StatelessWidget {
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
-            padding: const EdgeInsets.all(24),
+            padding: const EdgeInsets.all(MGSpacing.lg),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 // Result title
                 _buildResultTitle(),
 
-                const SizedBox(height: 32),
+                const SizedBox(height: MGSpacing.xl),
 
                 // Position medal
                 _buildPositionMedal(),
 
-                const SizedBox(height: 32),
+                const SizedBox(height: MGSpacing.xl),
 
                 // Track info
                 Text(
@@ -50,17 +52,17 @@ class RaceResultsScreen extends StatelessWidget {
                   textAlign: TextAlign.center,
                 ),
 
-                const SizedBox(height: 24),
+                const SizedBox(height: MGSpacing.lg),
 
                 // Race stats card
                 _buildStatsCard(),
 
-                const SizedBox(height: 24),
+                const SizedBox(height: MGSpacing.lg),
 
                 // Rewards card
                 _buildRewardsCard(),
 
-                const SizedBox(height: 32),
+                const SizedBox(height: MGSpacing.xl),
 
                 // Buttons
                 _buildButtons(context),
@@ -118,7 +120,7 @@ class RaceResultsScreen extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(icon, color: color, size: 64),
-          const SizedBox(height: 8),
+          const SizedBox(height: MGSpacing.xs),
           Text(
             '$position위',
             style: TextStyle(
@@ -136,14 +138,14 @@ class RaceResultsScreen extends StatelessWidget {
     return Card(
       color: AppColors.panel,
       child: Padding(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(MGSpacing.mdLg),
         child: Column(
           children: [
             Text('레이스 기록', style: AppTextStyles.header2),
-            const SizedBox(height: 16),
+            const SizedBox(height: MGSpacing.md),
             _buildStatRow(Icons.timer, '완주 시간', raceTime),
             if (isNewBestTime) ...[
-              const SizedBox(height: 8),
+              const SizedBox(height: MGSpacing.xs),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                 decoration: BoxDecoration(
@@ -155,7 +157,7 @@ class RaceResultsScreen extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     const Icon(Icons.star, color: MGColors.gold, size: 16),
-                    const SizedBox(width: 4),
+                    const SizedBox(width: MGSpacing.xxs),
                     Text(
                       '신기록!',
                       style: TextStyle(
@@ -177,13 +179,13 @@ class RaceResultsScreen extends StatelessWidget {
     return Card(
       color: AppColors.panel,
       child: Padding(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(MGSpacing.mdLg),
         child: Column(
           children: [
             Text('보상', style: AppTextStyles.header2),
-            const SizedBox(height: 16),
+            const SizedBox(height: MGSpacing.md),
             _buildRewardRow(Icons.monetization_on, '코인', '+$coinsEarned', MGColors.gold),
-            const SizedBox(height: 12),
+            const SizedBox(height: MGSpacing.sm),
             _buildRewardRow(Icons.trending_up, '경험치', '+$experienceEarned', MGColors.info),
           ],
         ),
@@ -198,7 +200,7 @@ class RaceResultsScreen extends StatelessWidget {
         Row(
           children: [
             Icon(icon, size: 24, color: AppColors.primary),
-            const SizedBox(width: 12),
+            const SizedBox(width: MGSpacing.sm),
             Text(label, style: AppTextStyles.body),
           ],
         ),
@@ -220,7 +222,7 @@ class RaceResultsScreen extends StatelessWidget {
         Row(
           children: [
             Icon(icon, size: 24, color: color),
-            const SizedBox(width: 12),
+            const SizedBox(width: MGSpacing.sm),
             Text(label, style: AppTextStyles.body),
           ],
         ),
@@ -258,7 +260,7 @@ class RaceResultsScreen extends StatelessWidget {
           ),
         ),
 
-        const SizedBox(height: 12),
+        const SizedBox(height: MGSpacing.sm),
 
         // Race again button
         SizedBox(

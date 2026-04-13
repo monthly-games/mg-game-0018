@@ -1,10 +1,13 @@
+import 'package:mg_common_game/core/ui/layout/mg_spacing.dart';
+import 'package:mg_common_game/core/localization/localization.dart';
 import 'package:flutter/material.dart';
 import '../core/game_manager.dart';
 import '../features/racing/logic/race_engine.dart';
 import '../features/racing/data/track_data.dart';
 import '../features/racing/models/track.dart';
 import '../core/audio_manager.dart';
-import 'package:mg_common_game/core/ui/theme/mg_colors.dart';
+import 'package:mg_common_game/core/ui/theme/mg_colors.dart';import 'package:mg_common_game/l10n/localization.dart';
+
 
 class RaceScreen extends StatefulWidget {
   const RaceScreen({super.key});
@@ -65,15 +68,15 @@ class _RaceScreenState extends State<RaceScreen> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Position: ${result.position} / 6'),
-            Text('Time: ${(result.timeMs / 1000).toStringAsFixed(2)}s'),
-            Text('Earnings: ${result.coinsEarned} Coins'),
+            Text('ui_general_position_resultposition_6'.tr),
+            Text('ui_general_time_resulttimems_1000tostringasfixed2s'.tr),
+            Text('ui_general_earnings_resultcoinsearned_coins'.tr),
           ],
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('OK'),
+            child: Text('ui_general_diwali_token_collection'.tr),
           ),
         ],
       ),
@@ -85,9 +88,9 @@ class _RaceScreenState extends State<RaceScreen> {
     final garage = GameManager().garage;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Race Simulation')),
+      appBar: AppBar(title: Text('ui_general_race_simulation'.tr)),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(MGSpacing.md),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
@@ -97,11 +100,11 @@ class _RaceScreenState extends State<RaceScreen> {
                 title: Text(
                   'Driver: ${garage.equippedVehicle?.name ?? "None"}',
                 ),
-                subtitle: const Text('Ready to race!'),
+                subtitle: Text('ui_general_ready_to_race'.tr),
                 leading: const Icon(Icons.directions_car),
               ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: MGSpacing.mdLg),
 
             // Track Selection
             const Text('Select Track:', style: TextStyle(fontSize: 18)),
@@ -111,7 +114,7 @@ class _RaceScreenState extends State<RaceScreen> {
               items: TrackData.getAllTracks().map((track) {
                 return DropdownMenuItem(
                   value: track,
-                  child: Text('${track.name} (${track.lengthMeters}m)'),
+                  child: Text('ui_general_trackname_tracklengthmetersm'.tr),
                 );
               }).toList(),
               onChanged: _isRacing
@@ -130,14 +133,14 @@ class _RaceScreenState extends State<RaceScreen> {
               ElevatedButton(
                 onPressed: _startRace,
                 style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.all(24),
+                  padding: const EdgeInsets.all(MGSpacing.lg),
                   backgroundColor: MGColors.success,
                   foregroundColor: MGColors.textHighEmphasis,
                 ),
                 child: const Text('START RACE', style: TextStyle(fontSize: 24)),
               ),
 
-            const SizedBox(height: 20),
+            const SizedBox(height: MGSpacing.mdLg),
             if (_lastResult != null)
               Text(
                 'Last Run: ${_lastResult!.position}th Place',

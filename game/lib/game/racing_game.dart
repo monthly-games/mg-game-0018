@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:mg_common_game/core/localization/localization.dart';
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame/game.dart';

@@ -1,4 +1,6 @@
-import 'dart:async';
+import 'dart:async';import 'package:mg_common_game/l10n/localization.dart';
+import 'package:mg_common_game/core/localization/localization.dart';
+
 
 import 'package:flutter/material.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
@@ -8,7 +10,7 @@ import 'package:mg_common_game/systems/quests/daily_quest.dart';
 
 /// Daily Quest screen for MG-0018 Cartoon Racing RPG.
 ///
-/// Retention system (Stage 4) — displays daily quests with progress
+/// Retention system (Stage 4) -- displays daily quests with progress
 /// tracking, reward claiming, and reset timer countdown.
 ///
 /// ## Firebase Analytics Events
@@ -344,7 +346,7 @@ class _DailyQuestScreenState extends State<DailyQuestScreen> {
               const Spacer(),
               if (isClaimable)
                 MGButton(
-                  label: 'Claim',
+                  label: 'notification_rewardslength_rewards_claimed'.tr,
                   size: MGButtonSize.small,
                   icon: Icons.card_giftcard_rounded,
                   backgroundColor: MGColors.success,

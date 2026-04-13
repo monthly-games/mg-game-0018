@@ -1,9 +1,12 @@
+import 'package:mg_common_game/core/ui/layout/mg_spacing.dart';
+import 'package:mg_common_game/core/localization/localization.dart';
 import 'package:flutter/material.dart';
 import '../core/game_manager.dart';
 import '../features/racing/models/vehicle.dart';
 import '../features/meta/upgrade_config.dart';
 import '../core/audio_manager.dart';
-import 'package:mg_common_game/core/ui/theme/mg_colors.dart';
+import 'package:mg_common_game/core/ui/theme/mg_colors.dart';import 'package:mg_common_game/l10n/localization.dart';
+
 
 class GarageScreen extends StatefulWidget {
   const GarageScreen({super.key});
@@ -22,7 +25,7 @@ class _GarageScreenState extends State<GarageScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Garage')),
+      appBar: AppBar(title: Text('ui_general_garage_upgrades'.tr)),
       body: ListenableBuilder(
         listenable: GameManager().garage,
         builder: (context, _) {
@@ -80,9 +83,9 @@ class _VehicleCardState extends State<_VehicleCard>
   Widget build(BuildContext context) {
     final v = widget.vehicle;
     return Card(
-      margin: const EdgeInsets.all(8.0),
+      margin: const EdgeInsets.all(MGSpacing.xs),
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(MGSpacing.md),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -90,7 +93,7 @@ class _VehicleCardState extends State<_VehicleCard>
               v.name,
               style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: MGSpacing.xsMd),
             _buildStatRow('Speed', v.speedLevel, v.effectiveSpeed, () {
               if (GameManager().garage.upgradeSpeed(v.id)) {
                 _playUpgradeAnim();
@@ -114,7 +117,7 @@ class _VehicleCardState extends State<_VehicleCard>
                 AudioManager().playSfx('upgrade');
               }
             }),
-            const SizedBox(height: 10),
+            const SizedBox(height: MGSpacing.xsMd),
             AnimatedBuilder(
               animation: _scaleAnimation,
               builder: (context, child) {
@@ -163,10 +166,10 @@ class _VehicleCardState extends State<_VehicleCard>
           Expanded(
             child: LinearProgressIndicator(value: value / 200.0),
           ), // Arbitrary max
-          const SizedBox(width: 10),
-          Text('Lv.$level'),
-          const SizedBox(width: 10),
-          ElevatedButton(onPressed: onUpgrade, child: Text('Up (\$ $cost)')),
+          const SizedBox(width: MGSpacing.xsMd),
+          Text('progress_lvlevel'.tr),
+          const SizedBox(width: MGSpacing.xsMd),
+          ElevatedButton(onPressed: onUpgrade, child: Text('ui_general_up_cost'.tr)),
         ],
       ),
     );

@@ -1,7 +1,10 @@
+import 'package:mg_common_game/core/ui/layout/mg_spacing.dart';
+import 'package:mg_common_game/core/localization/localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:mg_common_game/core/ui/theme/app_colors.dart';
-import 'package:mg_common_game/core/ui/theme/app_text_styles.dart';
+import 'package:mg_common_game/core/ui/theme/app_text_styles.dart';import 'package:mg_common_game/l10n/localization.dart';
+
 
 import '../features/player/player_manager.dart';
 import '../features/save/save_manager.dart';
@@ -49,8 +52,8 @@ class _HomeScreenState extends State<HomeScreen> {
         title: Row(
           children: [
             Icon(Icons.directions_car, color: AppColors.primary, size: 32),
-            const SizedBox(width: 12),
-            const Expanded(child: Text('환영합니다!')),
+            const SizedBox(width: MGSpacing.sm),
+            const Expanded(child: Text('ui_general_환영합니다'.tr)),
           ],
         ),
         content: SingleChildScrollView(
@@ -59,19 +62,19 @@ class _HomeScreenState extends State<HomeScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text('카툰 레이싱 RPG', style: AppTextStyles.header2),
-              const SizedBox(height: 16),
+              const SizedBox(height: MGSpacing.md),
               _buildTutorialStep('🏎️', '차량 선택', '차고에서 차량을 해금하고 강화'),
-              const SizedBox(height: 12),
+              const SizedBox(height: MGSpacing.sm),
               _buildTutorialStep('🃏', '카드 덱', '능력 카드로 전략적인 덱 구성'),
-              const SizedBox(height: 12),
+              const SizedBox(height: MGSpacing.sm),
               _buildTutorialStep('🏁', '레이스', '연료로 레이스 참가 및 보상 획득'),
-              const SizedBox(height: 12),
+              const SizedBox(height: MGSpacing.sm),
               _buildTutorialStep('🏪', '상점', '코인으로 아이템 구매'),
-              const SizedBox(height: 12),
+              const SizedBox(height: MGSpacing.sm),
               _buildTutorialStep('🏆', '리그', '승급으로 새 트랙과 차량 해금'),
-              const SizedBox(height: 16),
+              const SizedBox(height: MGSpacing.md),
               Container(
-                padding: const EdgeInsets.all(12),
+                padding: const EdgeInsets.all(MGSpacing.sm),
                 decoration: BoxDecoration(
                   color: MGColors.info.withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(8),
@@ -80,7 +83,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Row(
                   children: [
                     const Icon(Icons.info, color: MGColors.info, size: 20),
-                    const SizedBox(width: 8),
+                    const SizedBox(width: MGSpacing.xs),
                     Expanded(
                       child: Text(
                         '연료는 1분에 1씩 자동 회복됩니다!',
@@ -97,7 +100,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ElevatedButton.icon(
             onPressed: () => Navigator.pop(context),
             icon: const Icon(Icons.check),
-            label: const Text('시작하기!'),
+            label: Text('ui_general_시작하기'.tr),
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.primary,
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
@@ -113,13 +116,13 @@ class _HomeScreenState extends State<HomeScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(emoji, style: const TextStyle(fontSize: 24)),
-        const SizedBox(width: 12),
+        const SizedBox(width: MGSpacing.sm),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(title, style: AppTextStyles.body.copyWith(fontWeight: FontWeight.bold)),
-              const SizedBox(height: 4),
+              const SizedBox(height: MGSpacing.xxs),
               Text(description, style: AppTextStyles.caption),
             ],
           ),
@@ -132,7 +135,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Cartoon Racing RPG'),
+        title: Text('ui_general_cartoon_racing_rpg'.tr),
         backgroundColor: AppColors.primary,
         actions: [
           IconButton(
@@ -182,51 +185,51 @@ class _HomeScreenState extends State<HomeScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text('카툰 레이싱 RPG', style: AppTextStyles.header1),
-                const SizedBox(height: 32),
+                const SizedBox(height: MGSpacing.xl),
 
                 // Currency display
                 Card(
                   color: AppColors.panel,
                   child: Padding(
-                    padding: const EdgeInsets.all(16),
+                    padding: const EdgeInsets.all(MGSpacing.md),
                     child: Column(
                       children: [
                         _buildCurrencyRow(Icons.monetization_on, '코인', player.coins, MGColors.gold),
-                        const SizedBox(height: 8),
+                        const SizedBox(height: MGSpacing.xs),
                         _buildCurrencyRow(Icons.diamond, '다이아몬드', player.diamonds, MGColors.energy),
-                        const SizedBox(height: 8),
+                        const SizedBox(height: MGSpacing.xs),
                         _buildCurrencyRow(Icons.local_gas_station, '연료', player.fuel, MGColors.warning),
                       ],
                     ),
                   ),
                 ),
 
-                const SizedBox(height: 32),
+                const SizedBox(height: MGSpacing.xl),
 
                 // Current vehicle
                 Card(
                   color: AppColors.panel,
                   child: Padding(
-                    padding: const EdgeInsets.all(16),
+                    padding: const EdgeInsets.all(MGSpacing.md),
                     child: Column(
                       children: [
                         Text('현재 차량', style: AppTextStyles.header2),
-                        const SizedBox(height: 8),
+                        const SizedBox(height: MGSpacing.xs),
                         Text(player.selectedVehicle?.nameKo ?? '없음',
                              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-                        const SizedBox(height: 8),
+                        const SizedBox(height: MGSpacing.xs),
                         if (player.selectedVehicle != null) ...[
-                          Text('속도: ${player.selectedVehicle!.baseStats.speed}/10'),
-                          Text('가속: ${player.selectedVehicle!.baseStats.acceleration}/10'),
-                          Text('핸들링: ${player.selectedVehicle!.baseStats.handling}/10'),
-                          Text('부스트: ${player.selectedVehicle!.baseStats.boost}/10'),
+                          Text('progress_속도_playerselectedvehiclebasestatsspeed10'.tr),
+                          Text('progress_가속_playerselectedvehiclebasestatsacceleration10'.tr),
+                          Text('progress_핸들링_playerselectedvehiclebasestatshandling10'.tr),
+                          Text('progress_부스트_playerselectedvehiclebasestatsboost10'.tr),
                         ],
                       ],
                     ),
                   ),
                 ),
 
-                const SizedBox(height: 32),
+                const SizedBox(height: MGSpacing.xl),
 
                 // Race button
                 ElevatedButton.icon(
@@ -244,7 +247,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
 
-                const SizedBox(height: 16),
+                const SizedBox(height: MGSpacing.md),
 
                 // Other menu buttons
                 Wrap(
@@ -266,7 +269,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     _buildMenuButton(
                       context,
                       icon: Icons.style,
-                      label: '카드 덱',
+                      label: 'ui_general_'.tr카드_덱,
                       onPressed: () {
                         Navigator.push(
                           context,
@@ -288,7 +291,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     _buildMenuButton(
                       context,
                       icon: Icons.emoji_events,
-                      label: '리그',
+                      label: 'ui_general_'.tr모든_리그,
                       onPressed: () {
                         Navigator.push(
                           context,
@@ -313,7 +316,7 @@ class _HomeScreenState extends State<HomeScreen> {
         Row(
           children: [
             Icon(icon, color: color, size: 24),
-            const SizedBox(width: 8),
+            const SizedBox(width: MGSpacing.xs),
             Text(label),
           ],
         ),
@@ -342,7 +345,7 @@ class _HomeScreenState extends State<HomeScreen> {
     // Spend fuel
     if (!player.spendFuel(10)) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('연료가 부족합니다!')),
+        const SnackBar(content: Text('ui_general_연료가_부족합니다'.tr)),
       );
       return;
     }
@@ -351,7 +354,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final vehicle = player.selectedVehicle;
     if (vehicle == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('차량을 선택해주세요!')),
+        const SnackBar(content: Text('ui_general_차량을_선택해주세요'.tr)),
       );
       return;
     }
@@ -379,7 +382,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
       messenger.showSnackBar(
         SnackBar(
-          content: Text('레이스 완료! $position위 - 보상: $rewards 코인'),
+          content: Text('notification_레이스_완료_position위_보상_rewards'.tr),
           duration: const Duration(seconds: 3),
         ),
       );

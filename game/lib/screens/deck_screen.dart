@@ -1,10 +1,13 @@
+import 'package:mg_common_game/core/ui/layout/mg_spacing.dart';
+import 'package:mg_common_game/core/localization/localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:mg_common_game/core/ui/theme/app_colors.dart';
 import 'package:mg_common_game/core/ui/theme/app_text_styles.dart';
 import '../features/player/player_manager.dart';
 import '../features/cards/card_data.dart';
-import 'package:mg_common_game/core/ui/theme/mg_colors.dart';
+import 'package:mg_common_game/core/ui/theme/mg_colors.dart';import 'package:mg_common_game/l10n/localization.dart';
+
 
 /// Deck management screen for ability cards
 class DeckScreen extends StatefulWidget {
@@ -28,7 +31,7 @@ class _DeckScreenState extends State<DeckScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('카드 덱 관리'),
+        title: Text('ui_general_카드_덱_관리'.tr),
         backgroundColor: AppColors.primary,
         actions: [
           TextButton(
@@ -46,13 +49,13 @@ class _DeckScreenState extends State<DeckScreen> {
             children: [
               // Current deck (3 slots)
               Container(
-                padding: const EdgeInsets.all(16),
+                padding: const EdgeInsets.all(MGSpacing.md),
                 color: AppColors.panel,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text('현재 덱 (${_selectedCardIds.length}/3)', style: AppTextStyles.header2),
-                    const SizedBox(height: 12),
+                    const SizedBox(height: MGSpacing.sm),
                     Row(
                       children: List.generate(3, (index) {
                         if (index < _selectedCardIds.length) {
@@ -73,7 +76,7 @@ class _DeckScreenState extends State<DeckScreen> {
                 ),
               ),
 
-              const SizedBox(height: 16),
+              const SizedBox(height: MGSpacing.md),
 
               // Available cards
               Padding(
@@ -81,11 +84,11 @@ class _DeckScreenState extends State<DeckScreen> {
                 child: Text('사용 가능한 카드', style: AppTextStyles.header2),
               ),
 
-              const SizedBox(height: 8),
+              const SizedBox(height: MGSpacing.xs),
 
               Expanded(
                 child: GridView.builder(
-                  padding: const EdgeInsets.all(16),
+                  padding: const EdgeInsets.all(MGSpacing.md),
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
                     crossAxisSpacing: 12,
@@ -112,7 +115,7 @@ class _DeckScreenState extends State<DeckScreen> {
   Widget _buildDeckSlot(AbilityCard? card, VoidCallback onRemove) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 4),
-      padding: const EdgeInsets.all(12),
+      padding: const EdgeInsets.all(MGSpacing.sm),
       decoration: BoxDecoration(
         color: _getCardRarityColor(card!.rarity).withValues(alpha: 0.3),
         border: Border.all(color: _getCardRarityColor(card.rarity), width: 2),
@@ -125,7 +128,7 @@ class _DeckScreenState extends State<DeckScreen> {
             color: MGColors.textHighEmphasis,
             size: 32,
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: MGSpacing.xs),
           Text(
             card.nameKo,
             style: AppTextStyles.caption,
@@ -133,7 +136,7 @@ class _DeckScreenState extends State<DeckScreen> {
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: MGSpacing.xs),
           IconButton(
             icon: const Icon(Icons.remove_circle, color: MGColors.error),
             onPressed: onRemove,
@@ -147,7 +150,7 @@ class _DeckScreenState extends State<DeckScreen> {
   Widget _buildEmptySlot() {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 4),
-      padding: const EdgeInsets.all(12),
+      padding: const EdgeInsets.all(MGSpacing.sm),
       decoration: BoxDecoration(
         color: MGColors.common,
         border: Border.all(color: MGColors.common, width: 2),
@@ -157,7 +160,7 @@ class _DeckScreenState extends State<DeckScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(Icons.add_circle_outline, color: MGColors.common, size: 32),
-          const SizedBox(height: 8),
+          const SizedBox(height: MGSpacing.xs),
           Text(
             '빈 슬롯',
             style: AppTextStyles.caption.copyWith(color: MGColors.common),
@@ -192,7 +195,7 @@ class _DeckScreenState extends State<DeckScreen> {
         child: Stack(
           children: [
             Padding(
-              padding: const EdgeInsets.all(12),
+              padding: const EdgeInsets.all(MGSpacing.sm),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -201,7 +204,7 @@ class _DeckScreenState extends State<DeckScreen> {
                     color: isUnlocked ? MGColors.textHighEmphasis : MGColors.common,
                     size: 48,
                   ),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: MGSpacing.sm),
                   Text(
                     card.nameKo,
                     style: AppTextStyles.body.copyWith(
@@ -210,7 +213,7 @@ class _DeckScreenState extends State<DeckScreen> {
                     ),
                     textAlign: TextAlign.center,
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: MGSpacing.xs),
                   if (isUnlocked) ...[
                     Text(
                       card.description,
@@ -219,12 +222,12 @@ class _DeckScreenState extends State<DeckScreen> {
                       maxLines: 3,
                       overflow: TextOverflow.ellipsis,
                     ),
-                    const SizedBox(height: 8),
+                    const SizedBox(height: MGSpacing.xs),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         const Icon(Icons.timer, size: 14, color: MGColors.textMediumEmphasis),
-                        const SizedBox(width: 4),
+                        const SizedBox(width: MGSpacing.xxs),
                         Text(
                           '${card.baseCooldown}s',
                           style: AppTextStyles.caption.copyWith(fontSize: 10),
@@ -233,7 +236,7 @@ class _DeckScreenState extends State<DeckScreen> {
                     ),
                   ] else ...[
                     const Icon(Icons.lock, color: MGColors.textDisabled, size: 32),
-                    const SizedBox(height: 4),
+                    const SizedBox(height: MGSpacing.xxs),
                     Text(
                       '잠김',
                       style: AppTextStyles.caption.copyWith(color: MGColors.textDisabled),
@@ -247,7 +250,7 @@ class _DeckScreenState extends State<DeckScreen> {
                 top: 8,
                 right: 8,
                 child: Container(
-                  padding: const EdgeInsets.all(4),
+                  padding: const EdgeInsets.all(MGSpacing.xxs),
                   decoration: const BoxDecoration(
                     color: MGColors.success,
                     shape: BoxShape.circle,
@@ -266,7 +269,7 @@ class _DeckScreenState extends State<DeckScreen> {
     if (player.equipCards(_selectedCardIds)) {
       Navigator.pop(context);
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('덱이 저장되었습니다!')),
+        const SnackBar(content: Text('ui_general_덱이_저장되었습니다'.tr)),
       );
     }
   }

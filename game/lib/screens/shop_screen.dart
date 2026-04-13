@@ -1,7 +1,10 @@
+import 'package:mg_common_game/core/ui/layout/mg_spacing.dart';
+import 'package:mg_common_game/core/localization/localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:mg_common_game/core/ui/theme/app_colors.dart';
-import 'package:mg_common_game/core/ui/theme/app_text_styles.dart';
+import 'package:mg_common_game/core/ui/theme/app_text_styles.dart';import 'package:mg_common_game/l10n/localization.dart';
+
 
 import '../features/player/player_manager.dart';
 import '../features/cards/card_data.dart';
@@ -22,32 +25,32 @@ class ShopScreen extends StatelessWidget {
       body: Consumer<PlayerManager>(
         builder: (context, player, child) {
           return SingleChildScrollView(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(MGSpacing.md),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Currency display
                 _buildCurrencyPanel(player),
 
-                const SizedBox(height: 24),
+                const SizedBox(height: MGSpacing.lg),
 
                 // Fuel section
                 Text('연료', style: AppTextStyles.header1),
-                const SizedBox(height: 12),
+                const SizedBox(height: MGSpacing.sm),
                 _buildFuelShop(context, player),
 
-                const SizedBox(height: 24),
+                const SizedBox(height: MGSpacing.lg),
 
                 // Card packs section
                 Text('카드 팩', style: AppTextStyles.header1),
-                const SizedBox(height: 12),
+                const SizedBox(height: MGSpacing.sm),
                 _buildCardPackShop(context, player),
 
-                const SizedBox(height: 24),
+                const SizedBox(height: MGSpacing.lg),
 
                 // Premium currency exchange
                 Text('프리미엄', style: AppTextStyles.header1),
-                const SizedBox(height: 12),
+                const SizedBox(height: MGSpacing.sm),
                 _buildPremiumShop(context, player),
               ],
             ),
@@ -61,7 +64,7 @@ class ShopScreen extends StatelessWidget {
     return Card(
       color: AppColors.panel,
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(MGSpacing.md),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
@@ -78,7 +81,7 @@ class ShopScreen extends StatelessWidget {
     return Column(
       children: [
         Icon(icon, color: color, size: 32),
-        const SizedBox(height: 4),
+        const SizedBox(height: MGSpacing.xxs),
         Text(label, style: AppTextStyles.caption),
         const SizedBox(height: 2),
         Text('$amount', style: TextStyle(color: color, fontSize: 20, fontWeight: FontWeight.bold)),
@@ -213,18 +216,18 @@ class ShopScreen extends StatelessWidget {
           onTap: onPurchase,
           borderRadius: BorderRadius.circular(12),
           child: Padding(
-            padding: const EdgeInsets.all(12),
+            padding: const EdgeInsets.all(MGSpacing.sm),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 Icon(icon, color: iconColor, size: 48),
-                const SizedBox(height: 8),
+                const SizedBox(height: MGSpacing.xs),
                 Text(
                   title,
                   style: AppTextStyles.header2.copyWith(fontSize: 16),
                   textAlign: TextAlign.center,
                 ),
-                const SizedBox(height: 4),
+                const SizedBox(height: MGSpacing.xxs),
                 Text(
                   description,
                   style: AppTextStyles.caption,
@@ -232,7 +235,7 @@ class ShopScreen extends StatelessWidget {
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
-                const SizedBox(height: 12),
+                const SizedBox(height: MGSpacing.sm),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                   decoration: BoxDecoration(
@@ -243,7 +246,7 @@ class ShopScreen extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Icon(currencyIcon, size: 16, color: MGColors.textHighEmphasis),
-                      const SizedBox(width: 4),
+                      const SizedBox(width: MGSpacing.xxs),
                       Text(
                         '$price',
                         style: const TextStyle(
@@ -266,14 +269,14 @@ class ShopScreen extends StatelessWidget {
   void _purchaseFuel(BuildContext context, PlayerManager player, int fuelAmount, int cost) {
     if (player.coins < cost) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('코인이 부족합니다!')),
+        const SnackBar(content: Text('ui_general_코인이_부족합니다'.tr)),
       );
       return;
     }
 
     if (player.fuel >= 100) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('연료가 가득 찼습니다!')),
+        const SnackBar(content: Text('ui_general_연료가_가득_찼습니다'.tr)),
       );
       return;
     }
@@ -281,7 +284,7 @@ class ShopScreen extends StatelessWidget {
     if (player.spendCoins(cost)) {
       player.addFuel(fuelAmount);
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('연료 $fuelAmount 충전 완료!')),
+        SnackBar(content: Text('ui_general_연료_fuelamount_충전_완료'.tr)),
       );
     }
   }
@@ -326,7 +329,7 @@ class ShopScreen extends StatelessWidget {
         player.addCoins(cost);
       }
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('이미 모든 카드를 보유하고 있습니다!')),
+        const SnackBar(content: Text('ui_general_이미_모든_카드를_보유하고_있습니다'.tr)),
       );
       return;
     }
@@ -340,7 +343,7 @@ class ShopScreen extends StatelessWidget {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('카드 획득!'),
+        title: Text('ui_general_카드_획득'.tr),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -349,18 +352,18 @@ class ShopScreen extends StatelessWidget {
               size: 64,
               color: _getCardRarityColor(unlockedCard.rarity),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: MGSpacing.md),
             Text(
               unlockedCard.nameKo,
               style: AppTextStyles.header2,
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: MGSpacing.xs),
             Text(
               unlockedCard.description,
               style: AppTextStyles.body,
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: MGSpacing.xs),
             Text(
               _getRarityText(unlockedCard.rarity),
               style: TextStyle(
@@ -383,7 +386,7 @@ class ShopScreen extends StatelessWidget {
   void _purchaseDiamonds(BuildContext context, PlayerManager player, int diamonds, int cost) {
     if (player.coins < cost) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('코인이 부족합니다!')),
+        const SnackBar(content: Text('ui_general_코인이_부족합니다'.tr)),
       );
       return;
     }
@@ -391,7 +394,7 @@ class ShopScreen extends StatelessWidget {
     if (player.spendCoins(cost)) {
       player.addDiamonds(diamonds);
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('다이아몬드 $diamonds 구매 완료!')),
+        SnackBar(content: Text('ui_general_다이아몬드_diamonds_구매_완료'.tr)),
       );
     }
   }

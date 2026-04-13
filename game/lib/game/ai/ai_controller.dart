@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:mg_common_game/core/localization/localization.dart';
 import 'package:flame/components.dart';
 import '../components/vehicle_component.dart';
 import '../tracks/track_data.dart';

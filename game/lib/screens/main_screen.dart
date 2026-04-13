@@ -1,3 +1,5 @@
+import 'package:mg_common_game/core/ui/layout/mg_spacing.dart';
+import 'package:mg_common_game/core/localization/localization.dart';
 import 'package:flutter/material.dart';
 import 'achievement_screen.dart';
 import 'daily_quest_screen.dart';
@@ -6,6 +8,8 @@ import 'race_screen.dart';
 import '../core/game_manager.dart';
 import '../core/audio_manager.dart';
 import 'package:mg_common_game/core/ui/theme/mg_colors.dart';
+import 'package:mg_common_game/l10n/localization.dart';
+
 
 class MainScreen extends StatelessWidget {
   const MainScreen({super.key});
@@ -31,7 +35,7 @@ class MainScreen extends StatelessWidget {
               ),
               ListTile(
                 leading: const Icon(Icons.shield),
-                title: const Text('Guild War'),
+                title: Text('ui_general_guild_war'.tr),
                 onTap: () {
                   Navigator.pop(context);
                   Navigator.of(context)
@@ -49,7 +53,7 @@ class MainScreen extends StatelessWidget {
               ),
               ListTile(
                 leading: const Icon(Icons.celebration),
-                title: const Text('Seasonal Event'),
+                title: Text('ui_general_seasonal_event'.tr),
                 onTap: () {
                   Navigator.pop(context);
                   Navigator.of(context)
@@ -66,7 +70,7 @@ class MainScreen extends StatelessWidget {
 
         return Scaffold(
           appBar: AppBar(
-            title: const Text('Cartoon Racing RPG'),
+            title: Text('ui_general_cartoon_racing_rpg'.tr),
             actions: [
               IconButton(
                 icon: const Icon(Icons.assignment_rounded),
@@ -103,7 +107,7 @@ class MainScreen extends StatelessWidget {
                 const SizedBox(height: 40),
                 ElevatedButton.icon(
                   icon: const Icon(Icons.garage),
-                  label: const Text('Garage (Upgrades)'),
+                  label: Text('ui_general_garage_upgrades'.tr),
                   onPressed: () {
                     AudioManager().playSfx('click');
                     Navigator.push(
@@ -121,10 +125,10 @@ class MainScreen extends StatelessWidget {
                     textStyle: const TextStyle(fontSize: 18),
                   ),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: MGSpacing.mdLg),
                 ElevatedButton.icon(
                   icon: const Icon(Icons.flag),
-                  label: const Text('Race Track'),
+                  label: Text('ui_general_race_track'.tr),
                   onPressed: () {
                     AudioManager().playSfx('click');
                     Navigator.push(
@@ -153,14 +157,14 @@ class MainScreen extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         _AnimatedCount(
-                          label: 'Coins',
+                          label: 'ui_general_not_enough_coins'.tr,
                           value: GameManager().economy.coins,
                           icon: Icons.monetization_on,
                           color: MGColors.gold,
                         ),
-                        const SizedBox(width: 20),
+                        const SizedBox(width: MGSpacing.mdLg),
                         _AnimatedCount(
-                          label: 'Gems',
+                          label: 'ui_general_playergems'.tr,
                           value: GameManager().economy.gems,
                           icon: Icons.diamond,
                           color: MGColors.info,

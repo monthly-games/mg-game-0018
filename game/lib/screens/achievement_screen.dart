@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mg_common_game/core/localization/localization.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mg_common_game/core/ui/mg_ui.dart';
@@ -17,7 +18,7 @@ enum AchievementCategory {
 
 /// Achievement screen for MG-0018 Cartoon Racing RPG.
 ///
-/// Retention system (Stage 4) — displays achievements grouped by category
+/// Retention system (Stage 4) -- displays achievements grouped by category
 /// with unlock states, point values, and completion percentages.
 ///
 /// ## Firebase Analytics Events

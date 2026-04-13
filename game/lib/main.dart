@@ -1,4 +1,11 @@
+import 'package:mg_common_game/systems/progression/achievement_manager.dart';
+
 import 'package:mg_common_game/mg_common_game.dart' hide AudioManager;
+import 'package:mg_common_game/core/localization/localization.dart';
+import 'package:mg_common_game/core/ui/accessibility/accessibility_settings.dart';
+// import 'package:mg_common_game/core/ui/screens/friends_screen.dart'; // Temporarily disabled
+// import 'package:mg_common_game/core/ui/screens/social_leaderboard_screen.dart'; // Temporarily disabled
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get_it/get_it.dart';
@@ -9,102 +16,164 @@ import 'package:game/features/racing/logic/racing_physics.dart';
 import 'package:game/features/racing/logic/vehicle_controller.dart';
 import 'package:game/features/racing/logic/race_manager.dart';
 import 'screens/collection_screen.dart';
-import 'game/tutorial_config.dart';
-import 'game/balancing_config.dart';
-
+// // import 'game/tutorial_config.dart'; // TutorialManager not available
+// import 'game/balancing_config.dart'; // BalancingManager not available
+// import 'package:firebase_core/firebase_core.dart';
+// import 'firebase_options.dart';
+// import 'package:mg_common_game/l10n/localization.dart'; // Temporarily disabled - file doesn't exist
+// import 'package:mg_common_game/systems/quests/daily_quest_v2.dart'; // Temporarily disabled
+// import 'package:mg_common_game/core/ui/screens/daily_quest_screen_v2.dart'; // Temporarily disabled
+// import 'package:mg_common_game/core/social/social_initializer.dart'; // Temporarily disabled
+// import 'package:mg_common_game/systems/tutorial/tutorial_manager.dart';
+import 'package:mg_common_game/l10n/extensions.dart';
+// 
 // ============================================================
 // Service Locator
 // ============================================================
-final GetIt getIt = GetIt.instance;
-
+// final GetIt getIt = GetIt.instance;
+// 
 // ============================================================
 // App Entry Point
 // ============================================================
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+WidgetsFlutterBinding.ensureInitialized();
+// Initialize Firebase Remote Config
+// Initialize Firebase Core
+try {
+// await // // Firebase.initializeApp(
+options: // DefaultFirebaseOptions.currentPlatform,
+);
+print('Firebase Core initialized successfully');
+} catch (e) {
+print('Failed to initialize Firebase Core: $e');
+}
+try {
+final remoteConfig = FirebaseRemoteConfig.instance;
+await remoteConfig.setDefaults({
+'feature_iap_enabled': true,
+'feature_new_ui_enabled': false,
+'feature_daily_rewards_enabled': true,
+'feature_tutorial_enabled': true,
+'min_app_version': '1.0.0',
 
-  // Allow both portrait and landscape for racing gameplay
-  await SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitUp,
-    DeviceOrientation.landscapeLeft,
-    DeviceOrientation.landscapeRight,
-  ]);
-
-  // Dark system chrome matching the racing theme
-  SystemChrome.setSystemUIOverlayStyle(
-    const SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent,
-      statusBarIconBrightness: Brightness.light,
-      systemNavigationBarColor: MGColors.backgroundDark,
-    ),
-  );
-
-  await _initializeServices();
-  _registerUpgrades();
-  await _loadSavedProgress();
-
-  // DailyQuest 시스템
-  GetIt.I.registerSingleton(DailyQuestManager());
-  // Achievement 시스템
-  GetIt.I.registerSingleton(AchievementManager());
-  // Collection 시스템
-  if (!GetIt.I.isRegistered<CollectionManager>()) {
+      'feature_battlepass': true,
+      'feature_gacha': true,});
+await remoteConfig.fetchAndActivate();
+print('Remote Config initialized successfully');
+} catch (e) {
+print('Failed to initialize Remote Config: $e');
+}
+// Allow both portrait and landscape for racing gameplay
+await SystemChrome.setPreferredOrientations([
+DeviceOrientation.portraitUp,
+DeviceOrientation.landscapeLeft,
+DeviceOrientation.landscapeRight,
+]);
+// Dark system chrome matching the racing theme
+SystemChrome.setSystemUIOverlayStyle(
+const SystemUiOverlayStyle(
+statusBarColor: Colors.transparent,
+statusBarIconBrightness: Brightness.light,
+systemNavigationBarColor: MGColors.backgroundDark,
+),
+);
+await _initializeServices();
+_registerUpgrades();
+await _loadSavedProgress();
+// DailyQuest 시스템
+// Daily Quest V2 - 7 Quest System with Streak Bonuses - Temporarily disabled
+// if (!GetIt.I.isRegistered<DailyQuestManagerV2>()) {
+//   final questManager = DailyQuestManagerV2();
+//   // ... quest setup code ...
+//   if (!GetIt.I.isRegistered<questManager>()) {
+    GetIt.I.registerSingleton(questManager);
+  };
+//   await questManager.loadQuestData();
+//   await questManager.checkAndResetIfNeeded();
+// }
+// Achievement 시스템
+if (!GetIt.I.isRegistered<AchievementManager(>()) {
+    GetIt.I.registerSingleton(AchievementManager());
+  });
+// Collection 시스템
+if (!GetIt.I.isRegistered<CollectionManager>()) {
+if (!GetIt.I.isRegistered<CollectionManager(>()) {
     GetIt.I.registerSingleton(CollectionManager());
-  // ── Retention Systems for DailyHub ────────────────────────
-  if (!GetIt.I.isRegistered<LoginRewardsManager>()) {
+  });
+// ── Retention Systems for DailyHub ────────────────────────
+// if (!GetIt.I.isRegistered<LoginRewardsManager>()) { // Temporarily disabled - manager doesn't exist yet
+//   if (!GetIt.I.isRegistered<LoginRewardsManager(>()) {
     GetIt.I.registerSingleton(LoginRewardsManager());
-  }
-  if (!GetIt.I.isRegistered<StreakManager>()) {
+  });
+// }
+// if (!GetIt.I.isRegistered<StreakManager>()) { // Temporarily disabled - manager doesn't exist yet
+//   if (!GetIt.I.isRegistered<StreakManager(>()) {
     GetIt.I.registerSingleton(StreakManager());
-  }
-  if (!GetIt.I.isRegistered<DailyChallengeManager>()) {
+  });
+// }
+// if (!GetIt.I.isRegistered<DailyChallengeManager>()) { // Temporarily disabled - manager doesn't exist yet
+//   if (!GetIt.I.isRegistered<DailyChallengeManager(>()) {
     GetIt.I.registerSingleton(DailyChallengeManager());
-}
-  // ── P3 Engine Systems ─────────────────────────────────────
-  if (!GetIt.I.isRegistered<GuildWarManager>()) {
+  });
+// }
+// ── P3 Engine Systems ─────────────────────────────────────
+// if (!GetIt.I.isRegistered<GuildWarManager>()) { // Temporarily disabled
+//   if (!GetIt.I.isRegistered<GuildWarManager(>()) {
     GetIt.I.registerSingleton(GuildWarManager());
-  }
-  if (!GetIt.I.isRegistered<TournamentManager>()) {
+  });
+// }
+// if (!GetIt.I.isRegistered<TournamentManager>()) { // Temporarily disabled
+//   if (!GetIt.I.isRegistered<TournamentManager(>()) {
     GetIt.I.registerSingleton(TournamentManager());
-  }
-  if (!GetIt.I.isRegistered<SeasonalContentManager>()) {
+  });
+// }
+// if (!GetIt.I.isRegistered<SeasonalContentManager>()) { // Temporarily disabled
+//   if (!GetIt.I.isRegistered<SeasonalContentManager(>()) {
     GetIt.I.registerSingleton(SeasonalContentManager());
-  }
-    _registerCollections();
-  }
-  _registerAchievements();
-  _registerDailyQuests();
-  // ── Tutorial & Balancing ──────────────────────────────────
-  if (!GetIt.I.isRegistered<TutorialManager>()) {
-    final tutorialManager = TutorialManager();
-    await tutorialManager.initialize();
-    tutorialManager.registerTutorial(
-      kOnboardingTutorial.id,
-      kOnboardingTutorial.steps,
-    );
-    GetIt.I.registerSingleton<TutorialManager>(tutorialManager);
-  }
-  if (!GetIt.I.isRegistered<BalancingManager>()) {
-    GetIt.I.registerSingleton<BalancingManager>(
-      BalancingManager(defaultConfig: kDefaultBalancingConfig),
-    );
-  }
-  // ── Q7 DI Fix: Missing Systems ──────────────────────────
-  if (!GetIt.I.isRegistered<BattlePassManager>()) {
-    GetIt.I.registerSingleton<BattlePassManager>(BattlePassManager());
-  }
-  if (!GetIt.I.isRegistered<GachaManager>()) {
-    GetIt.I.registerSingleton<GachaManager>(GachaManager());
-  }
-
-  runApp(const CartoonRacingApp());
+  });
+// }
+_registerCollections();
 }
-
+_registerAchievements();
+_registerDailyQuests();
+// ── Tutorial & Balancing ──────────────────────────────────
+if (!GetIt.I.isRegistered<TutorialManager>()) {
+final tutorialManager = TutorialManager();
+await tutorialManager.initialize();
+// Tutorial is started via startTutorial() method when needed
+GetIt.I.registerSingleton<TutorialManager>(tutorialManager);
+}
+// if (!GetIt.I.isRegistered<BalancingManager>()) { // Temporarily disabled - manager doesn't exist yet
+//   GetIt.I.registerSingleton<BalancingManager>(
+//     BalancingManager(defaultConfig: kDefaultBalancingConfig),
+//   );
+// }
+// ── Q7 DI Fix: Missing Systems ──────────────────────────
+if (!GetIt.I.isRegistered<BattlePassManager>()) {
+GetIt.I.registerSingleton<BattlePassManager>(BattlePassManager());
+}
+if (!GetIt.I.isRegistered<GachaManager>()) {
+GetIt.I.registerSingleton<GachaManager>(GachaManager());
+}
+// ── Social Systems Initialization ─────────────────────────────
+await SocialInitializer.initialize(
+playerId: 'player_' + DateTime.now().millisecondsSinceEpoch.toString(),
+playerName: 'Player',
+leaderboards: SocialInitializer.createStandardLeaderboards(
+gameId: 'mg_slot_casino',
+gameName: 'Slot Casino',
+),
+enableFirebase: true,
+);
+logger.i('Social systems initialized.');
+runApp(const CartoonRacingApp());
+}
+// 
 // ============================================================
 // Service Initialization
 // ============================================================
-Future<void> _initializeServices() async {
-  // Core singletons (GameManager & AudioManager use internal singletons)
+// Future<void> _initializeServices() async {
+//   // Core singletons (GameManager & AudioManager use internal singletons)
   final gameManager = GameManager();
   final audioManager = AudioManager();
   audioManager.initialize();
@@ -174,12 +243,12 @@ Future<void> _loadSavedProgress() async {
 }
 
 // ============================================================
-// Upgrade Registration — 8 Racing Upgrades
+// Upgrade Registration -- 8 Racing Upgrades
 // ============================================================
 void _registerUpgrades() {
   final upgradeManager = getIt<UpgradeManager>();
 
-  // 1. Engine Power — acceleration off the line and out of corners
+  // 1. Engine Power -- acceleration off the line and out of corners
   upgradeManager.registerUpgrade(Upgrade(
     id: 'engine_power',
     name: 'Engine Power',
@@ -190,7 +259,7 @@ void _registerUpgrades() {
     valuePerLevel: 0.5,
   ));
 
-  // 2. Top Speed — raises the maximum velocity cap
+  // 2. Top Speed -- raises the maximum velocity cap
   upgradeManager.registerUpgrade(Upgrade(
     id: 'top_speed',
     name: 'Top Speed',
@@ -201,7 +270,7 @@ void _registerUpgrades() {
     valuePerLevel: 2.0,
   ));
 
-  // 3. Handling — sharper cornering and turn responsiveness
+  // 3. Handling -- sharper cornering and turn responsiveness
   upgradeManager.registerUpgrade(Upgrade(
     id: 'handling',
     name: 'Handling',
@@ -212,7 +281,7 @@ void _registerUpgrades() {
     valuePerLevel: 0.3,
   ));
 
-  // 4. Braking System — shorter braking distance
+  // 4. Braking System -- shorter braking distance
   upgradeManager.registerUpgrade(Upgrade(
     id: 'braking',
     name: 'Braking System',
@@ -223,7 +292,7 @@ void _registerUpgrades() {
     valuePerLevel: 0.5,
   ));
 
-  // 5. Nitro Tank — longer boost duration
+  // 5. Nitro Tank -- longer boost duration
   upgradeManager.registerUpgrade(Upgrade(
     id: 'nitro_capacity',
     name: 'Nitro Tank',
@@ -234,7 +303,7 @@ void _registerUpgrades() {
     valuePerLevel: 15.0,
   ));
 
-  // 6. Tire Grip — better traction in turns
+  // 6. Tire Grip -- better traction in turns
   upgradeManager.registerUpgrade(Upgrade(
     id: 'tire_grip',
     name: 'Tire Grip',
@@ -245,7 +314,7 @@ void _registerUpgrades() {
     valuePerLevel: 0.08,
   ));
 
-  // 7. Weight Reduction — lighter chassis for faster acceleration
+  // 7. Weight Reduction -- lighter chassis for faster acceleration
   upgradeManager.registerUpgrade(Upgrade(
     id: 'weight_reduction',
     name: 'Weight Reduction',
@@ -256,7 +325,7 @@ void _registerUpgrades() {
     valuePerLevel: 1.5,
   ));
 
-  // 8. Aerodynamics — reduced air drag at high speeds
+  // 8. Aerodynamics -- reduced air drag at high speeds
   upgradeManager.registerUpgrade(Upgrade(
     id: 'aerodynamics',
     name: 'Aerodynamics',
@@ -269,15 +338,21 @@ void _registerUpgrades() {
 }
 
 // ============================================================
-// App Widget — MG Design System Theme
+// App Widget -- MG Design System Theme
 // ============================================================
 class CartoonRacingApp extends StatelessWidget {
   const CartoonRacingApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MGAccessibilityProvider(
+      settings: MGAccessibilitySettings.defaults,
+      onSettingsChanged: (settings) {
+        // Settings updated
+      },
+      child: MaterialApp(
       title: RacingConfig.gameTitle,
+                localizationsDelegates: mgLocalizationDelegates,
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         brightness: Brightness.dark,
@@ -345,9 +420,21 @@ class CartoonRacingApp extends StatelessWidget {
           seasonalContentManager: GetIt.I<SeasonalContentManager>(),
           accentColor: MGColors.primaryAction,
           onClose: () => Navigator.pop(context),
-          ),
-},
+        ),
+        '/friends': (context) => FriendsScreen(
+          title: 'FRIENDS',
+          onClose: () => Navigator.pop(context),
+          accentColor: MGColors.primaryAction,
+        ),
+        '/leaderboard': (context) => SocialLeaderboardScreen(
+          title: 'LEADERBOARD',
+          leaderboardId: 'mg_bubble_shooter_all_time',
+          onClose: () => Navigator.pop(context),
+          accentColor: MGColors.primaryAction,
+        ),
+      },
       home: const MainScreen(),
+    ),
     );
   }
 }
@@ -396,30 +483,30 @@ class RacingConfig {
 
 void _registerDailyQuests() {
   final dailyQuest = GetIt.I<DailyQuestManager>();
-  
+
   dailyQuest.registerQuest(DailyQuest(
-    id: 'collect_gold',
-    title: '골드 모으기',
-    description: '골드 1000 획득',
-    targetValue: 1000,
+    id: 'craft_items',
+    title: '아이템 제작',
+    description: '아이템 8개 제작',
+    targetValue: 8,
     goldReward: 500,
     xpReward: 10,
   ));
-  
+
   dailyQuest.registerQuest(DailyQuest(
-    id: 'play_games',
-    title: '게임 플레이',
-    description: '게임 5판 플레이',
-    targetValue: 5,
+    id: 'sell_crafts',
+    title: '제작품 판매',
+    description: '제작품 10개 판매',
+    targetValue: 10,
     goldReward: 300,
     xpReward: 5,
   ));
-  
+
   dailyQuest.registerQuest(DailyQuest(
-    id: 'level_up',
-    title: '레벨업',
-    description: '레벨 1 상승',
-    targetValue: 1,
+    id: 'unlock_blueprints',
+    title: '청사진 해금',
+    description: '새 청사진 2개 해금',
+    targetValue: 2,
     goldReward: 200,
     xpReward: 3,
   ));

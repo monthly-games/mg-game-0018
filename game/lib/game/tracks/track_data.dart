@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:mg_common_game/core/localization/localization.dart';
 import 'package:flame/components.dart';
 import 'package:mg_common_game/core/ui/theme/mg_colors.dart';
 

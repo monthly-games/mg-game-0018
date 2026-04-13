@@ -1,0 +1,7 @@
+{
+  "tool_name": "Bash",
+  "tool_input_preview": "{\"command\":\"cd \\\"D:/mg-games/repos/mg-game-0022/game\\\" && sed -i '60s/const ListTile(/ListTile(/; 61s/.+/            title: Text(\\\"ui_general_version_100\\\".tr),/' ui/settings_screen.dart && echo \\\"MG-...",
+  "error": "Exit code 2\nsed: can't read ui/settings_screen.dart: No such file or directory",
+  "timestamp": "2026-04-12T09:25:58.241Z",
+  "retry_count": 1
+}

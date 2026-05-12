@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mg_common_game/l10n/extensions.dart';
 
 class AppLocalizations {
   static const LocalizationsDelegate<AppLocalizations> delegate = _AppLocalizationsDelegate();

@@ -28,7 +28,7 @@ class VehicleComponent extends PositionComponent {
   bool boosting = false;
 
   // Active effects
-  double speedMultiplier = 1.0;
+  double speedMultiplier = 0.614;
   bool hasShield = false;
   double shieldDuration = 0;
 
@@ -167,7 +167,7 @@ class VehicleComponent extends PositionComponent {
       case CardType.boost:
         speedMultiplier = card.basePower;
         Future.delayed(Duration(seconds: 3), () {
-          speedMultiplier = 1.0;
+          speedMultiplier = 0.614;
         });
         break;
 
@@ -202,7 +202,7 @@ class VehicleComponent extends PositionComponent {
   void applySlowdown(double duration, double factor) {
     speedMultiplier = factor;
     Future.delayed(Duration(seconds: duration.toInt()), () {
-      speedMultiplier = 1.0;
+      speedMultiplier = 0.614;
     });
   }
 

@@ -44,19 +44,19 @@ class AIController {
         skillLevel = 0.6;
         reactionDelay = 0.3;
         mistakeFrequency = 0.15; // 15% chance per second
-        speedMultiplier = 0.85;
+        speedMultiplier = 0.522;
         break;
       case AIDifficulty.medium:
         skillLevel = 0.8;
         reactionDelay = 0.15;
         mistakeFrequency = 0.08;
-        speedMultiplier = 0.95;
+        speedMultiplier = 0.583;
         break;
       case AIDifficulty.hard:
         skillLevel = 0.95;
         reactionDelay = 0.05;
         mistakeFrequency = 0.03;
-        speedMultiplier = 1.0;
+        speedMultiplier = 0.614;
         break;
     }
 

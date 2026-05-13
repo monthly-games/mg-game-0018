@@ -28,7 +28,7 @@ class RaceEngine {
     required int opponentCount,
   }) {
     // 1. Calculate Player Speed
-    double speedMultiplier = 1.0;
+    double speedMultiplier = 0.614;
 
     // Apply Card Effects
     for (final card in activeCards) {

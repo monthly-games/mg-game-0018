@@ -1,594 +1,434 @@
-import 'package:mg_common_game/systems/progression/achievement_manager.dart';
-
-import 'package:mg_common_game/mg_common_game.dart' hide AudioManager;
-import 'package:mg_common_game/core/localization/localization.dart';
-import 'package:mg_common_game/core/ui/accessibility/accessibility_settings.dart';
-// import 'package:mg_common_game/core/ui/screens/friends_screen.dart'; // Temporarily disabled
-// import 'package:mg_common_game/core/ui/screens/social_leaderboard_screen.dart'; // Temporarily disabled
-import 'package:firebase_remote_config/firebase_remote_config.dart';
+import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:get_it/get_it.dart';
-import 'package:game/screens/main_screen.dart';
-import 'package:game/core/game_manager.dart';
-import 'package:game/core/audio_manager.dart';
-import 'package:game/features/racing/logic/racing_physics.dart';
-import 'package:game/features/racing/logic/vehicle_controller.dart';
-import 'package:game/features/racing/logic/race_manager.dart';
-import 'screens/collection_screen.dart';
-// // import 'game/tutorial_config.dart'; // TutorialManager not available
-// import 'game/balancing_config.dart'; // BalancingManager not available
-// import 'package:firebase_core/firebase_core.dart';
-// import 'firebase_options.dart';
-// import 'package:mg_common_game/l10n/localization.dart'; // Temporarily disabled - file doesn't exist
-// import 'package:mg_common_game/systems/quests/daily_quest_v2.dart'; // Temporarily disabled
-// import 'package:mg_common_game/core/ui/screens/daily_quest_screen_v2.dart'; // Temporarily disabled
-// import 'package:mg_common_game/core/social/social_initializer.dart'; // Temporarily disabled
-// import 'package:mg_common_game/systems/tutorial/tutorial_manager.dart';
-import 'package:mg_common_game/l10n/extensions.dart';
-// 
-// ============================================================
-// Service Locator
-// ============================================================
-// final GetIt getIt = GetIt.instance;
-// 
-// ============================================================
-// App Entry Point
-// ============================================================
-void main() async {
-WidgetsFlutterBinding.ensureInitialized();
-// Initialize Firebase Remote Config
-// Initialize Firebase Core
-try {
-// await // // Firebase.initializeApp(
-options: // DefaultFirebaseOptions.currentPlatform,
-);
-print('Firebase Core initialized successfully');
-} catch (e) {
-print('Failed to initialize Firebase Core: $e');
-}
-try {
-final remoteConfig = FirebaseRemoteConfig.instance;
-await remoteConfig.setDefaults({
-'feature_iap_enabled': true,
-'feature_new_ui_enabled': false,
-'feature_daily_rewards_enabled': true,
-'feature_tutorial_enabled': true,
-'min_app_version': '1.0.0',
+import 'package:game/game/level_design_config.dart';
+import 'package:game/game/wave_spawn_table.dart';
 
-      'feature_battlepass': true,
-      'feature_gacha': true,});
-await remoteConfig.fetchAndActivate();
-print('Remote Config initialized successfully');
-} catch (e) {
-print('Failed to initialize Remote Config: $e');
-}
-// Allow both portrait and landscape for racing gameplay
-await SystemChrome.setPreferredOrientations([
-DeviceOrientation.portraitUp,
-DeviceOrientation.landscapeLeft,
-DeviceOrientation.landscapeRight,
-]);
-// Dark system chrome matching the racing theme
-SystemChrome.setSystemUIOverlayStyle(
-const SystemUiOverlayStyle(
-statusBarColor: Colors.transparent,
-statusBarIconBrightness: Brightness.light,
-systemNavigationBarColor: MGColors.backgroundDark,
-),
-);
-await _initializeServices();
-_registerUpgrades();
-await _loadSavedProgress();
-// DailyQuest 시스템
-// Daily Quest V2 - 7 Quest System with Streak Bonuses - Temporarily disabled
-// if (!GetIt.I.isRegistered<DailyQuestManagerV2>()) {
-//   final questManager = DailyQuestManagerV2();
-//   // ... quest setup code ...
-//   if (!GetIt.I.isRegistered<questManager>()) {
-    GetIt.I.registerSingleton(questManager);
-  };
-//   await questManager.loadQuestData();
-//   await questManager.checkAndResetIfNeeded();
-// }
-// Achievement 시스템
-if (!GetIt.I.isRegistered<AchievementManager(>()) {
-    GetIt.I.registerSingleton(AchievementManager());
-  });
-// Collection 시스템
-if (!GetIt.I.isRegistered<CollectionManager>()) {
-if (!GetIt.I.isRegistered<CollectionManager(>()) {
-    GetIt.I.registerSingleton(CollectionManager());
-  });
-// ── Retention Systems for DailyHub ────────────────────────
-// if (!GetIt.I.isRegistered<LoginRewardsManager>()) { // Temporarily disabled - manager doesn't exist yet
-//   if (!GetIt.I.isRegistered<LoginRewardsManager(>()) {
-    GetIt.I.registerSingleton(LoginRewardsManager());
-  });
-// }
-// if (!GetIt.I.isRegistered<StreakManager>()) { // Temporarily disabled - manager doesn't exist yet
-//   if (!GetIt.I.isRegistered<StreakManager(>()) {
-    GetIt.I.registerSingleton(StreakManager());
-  });
-// }
-// if (!GetIt.I.isRegistered<DailyChallengeManager>()) { // Temporarily disabled - manager doesn't exist yet
-//   if (!GetIt.I.isRegistered<DailyChallengeManager(>()) {
-    GetIt.I.registerSingleton(DailyChallengeManager());
-  });
-// }
-// ── P3 Engine Systems ─────────────────────────────────────
-// if (!GetIt.I.isRegistered<GuildWarManager>()) { // Temporarily disabled
-//   if (!GetIt.I.isRegistered<GuildWarManager(>()) {
-    GetIt.I.registerSingleton(GuildWarManager());
-  });
-// }
-// if (!GetIt.I.isRegistered<TournamentManager>()) { // Temporarily disabled
-//   if (!GetIt.I.isRegistered<TournamentManager(>()) {
-    GetIt.I.registerSingleton(TournamentManager());
-  });
-// }
-// if (!GetIt.I.isRegistered<SeasonalContentManager>()) { // Temporarily disabled
-//   if (!GetIt.I.isRegistered<SeasonalContentManager(>()) {
-    GetIt.I.registerSingleton(SeasonalContentManager());
-  });
-// }
-_registerCollections();
-}
-_registerAchievements();
-_registerDailyQuests();
-// ── Tutorial & Balancing ──────────────────────────────────
-if (!GetIt.I.isRegistered<TutorialManager>()) {
-final tutorialManager = TutorialManager();
-await tutorialManager.initialize();
-// Tutorial is started via startTutorial() method when needed
-GetIt.I.registerSingleton<TutorialManager>(tutorialManager);
-}
-// if (!GetIt.I.isRegistered<BalancingManager>()) { // Temporarily disabled - manager doesn't exist yet
-//   GetIt.I.registerSingleton<BalancingManager>(
-//     BalancingManager(defaultConfig: kDefaultBalancingConfig),
-//   );
-// }
-// ── Q7 DI Fix: Missing Systems ──────────────────────────
-if (!GetIt.I.isRegistered<BattlePassManager>()) {
-GetIt.I.registerSingleton<BattlePassManager>(BattlePassManager());
-}
-if (!GetIt.I.isRegistered<GachaManager>()) {
-GetIt.I.registerSingleton<GachaManager>(GachaManager());
-}
-// ── Social Systems Initialization ─────────────────────────────
-await SocialInitializer.initialize(
-playerId: 'player_' + DateTime.now().millisecondsSinceEpoch.toString(),
-playerName: 'Player',
-leaderboards: SocialInitializer.createStandardLeaderboards(
-gameId: 'mg_slot_casino',
-gameName: 'Slot Casino',
-),
-enableFirebase: true,
-);
-logger.i('Social systems initialized.');
-runApp(const CartoonRacingApp());
-}
-// 
-// ============================================================
-// Service Initialization
-// ============================================================
-// Future<void> _initializeServices() async {
-//   // Core singletons (GameManager & AudioManager use internal singletons)
-  final gameManager = GameManager();
-  final audioManager = AudioManager();
-  audioManager.initialize();
-
-  // Racing physics engine with tunable base parameters
-  final racingPhysics = RacingPhysics(
-    baseAcceleration: RacingConfig.baseAcceleration,
-    baseMaxSpeed: RacingConfig.baseMaxSpeed,
-    baseFriction: RacingConfig.baseFriction,
-    baseTurnSpeed: RacingConfig.baseTurnSpeed,
-    baseBraking: RacingConfig.baseBraking,
-  );
-
-  // Vehicle controller wired to the physics engine
-  final vehicleController = VehicleController(
-    physics: racingPhysics,
-    nitroCapacity: RacingConfig.defaultNitroCapacity,
-    nitroRechargeRate: RacingConfig.nitroRechargeRate,
-  );
-
-  // Race progression tracker (laps, checkpoints, timing)
-  final raceManager = RaceManager(
-    defaultLapCount: RacingConfig.defaultLapCount,
-  );
-
-  // Upgrade system from mg_common_game
-  final upgradeManager = UpgradeManager();
-
-  // ── Register all services in GetIt ───────────
-  getIt.registerSingleton<GameManager>(gameManager);
-  getIt.registerSingleton<AudioManager>(audioManager);
-  getIt.registerSingleton<RacingPhysics>(racingPhysics);
-  getIt.registerSingleton<VehicleController>(vehicleController);
-  getIt.registerSingleton<RaceManager>(raceManager);
-  getIt.registerSingleton<UpgradeManager>(upgradeManager);
-
-  // Initialize game data (loads saves, grants starter content)
-  await gameManager.initialize();
+void main() {
+  runApp(const MyApp());
 }
 
-// ============================================================
-// Load Saved Upgrade Progress
-// ============================================================
-Future<void> _loadSavedProgress() async {
-  final upgradeManager = getIt<UpgradeManager>();
-  await upgradeManager.loadUpgrades();
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
-  // Sync physics parameters with upgrade levels
-  final physics = getIt<RacingPhysics>();
-  final enginePower = upgradeManager.getUpgrade('engine_power');
-  final topSpeed = upgradeManager.getUpgrade('top_speed');
-  final handling = upgradeManager.getUpgrade('handling');
-  final braking = upgradeManager.getUpgrade('braking');
-  final tireGrip = upgradeManager.getUpgrade('tire_grip');
-  final aero = upgradeManager.getUpgrade('aerodynamics');
-  final weight = upgradeManager.getUpgrade('weight_reduction');
-
-  physics.applyUpgrades(
-    accelerationBonus: enginePower?.currentValue ?? 0,
-    maxSpeedBonus: topSpeed?.currentValue ?? 0,
-    handlingBonus: handling?.currentValue ?? 0,
-    brakingBonus: braking?.currentValue ?? 0,
-    gripBonus: tireGrip?.currentValue ?? 0,
-    aeroBonus: aero?.currentValue ?? 0,
-    weightBonus: weight?.currentValue ?? 0,
-  );
-}
-
-// ============================================================
-// Upgrade Registration -- 8 Racing Upgrades
-// ============================================================
-void _registerUpgrades() {
-  final upgradeManager = getIt<UpgradeManager>();
-
-  // 1. Engine Power -- acceleration off the line and out of corners
-  upgradeManager.registerUpgrade(Upgrade(
-    id: 'engine_power',
-    name: 'Engine Power',
-    description: 'Boosts acceleration off the line and out of corners',
-    maxLevel: 10,
-    baseCost: 100,
-    costMultiplier: 1.5,
-    valuePerLevel: 0.5,
-  ));
-
-  // 2. Top Speed -- raises the maximum velocity cap
-  upgradeManager.registerUpgrade(Upgrade(
-    id: 'top_speed',
-    name: 'Top Speed',
-    description: 'Increases maximum velocity on straightaways',
-    maxLevel: 10,
-    baseCost: 150,
-    costMultiplier: 1.6,
-    valuePerLevel: 2.0,
-  ));
-
-  // 3. Handling -- sharper cornering and turn responsiveness
-  upgradeManager.registerUpgrade(Upgrade(
-    id: 'handling',
-    name: 'Handling',
-    description: 'Improves cornering speed and turn responsiveness',
-    maxLevel: 10,
-    baseCost: 120,
-    costMultiplier: 1.4,
-    valuePerLevel: 0.3,
-  ));
-
-  // 4. Braking System -- shorter braking distance
-  upgradeManager.registerUpgrade(Upgrade(
-    id: 'braking',
-    name: 'Braking System',
-    description: 'Reduces braking distance for tighter cornering',
-    maxLevel: 8,
-    baseCost: 80,
-    costMultiplier: 1.5,
-    valuePerLevel: 0.5,
-  ));
-
-  // 5. Nitro Tank -- longer boost duration
-  upgradeManager.registerUpgrade(Upgrade(
-    id: 'nitro_capacity',
-    name: 'Nitro Tank',
-    description: 'Increases nitro fuel capacity for longer boosts',
-    maxLevel: 8,
-    baseCost: 200,
-    costMultiplier: 1.7,
-    valuePerLevel: 15.0,
-  ));
-
-  // 6. Tire Grip -- better traction in turns
-  upgradeManager.registerUpgrade(Upgrade(
-    id: 'tire_grip',
-    name: 'Tire Grip',
-    description: 'Improves traction, reducing speed loss in corners',
-    maxLevel: 8,
-    baseCost: 130,
-    costMultiplier: 1.5,
-    valuePerLevel: 0.08,
-  ));
-
-  // 7. Weight Reduction -- lighter chassis for faster acceleration
-  upgradeManager.registerUpgrade(Upgrade(
-    id: 'weight_reduction',
-    name: 'Weight Reduction',
-    description: 'Lighter chassis for faster acceleration and higher top speed',
-    maxLevel: 6,
-    baseCost: 300,
-    costMultiplier: 2.0,
-    valuePerLevel: 1.5,
-  ));
-
-  // 8. Aerodynamics -- reduced air drag at high speeds
-  upgradeManager.registerUpgrade(Upgrade(
-    id: 'aerodynamics',
-    name: 'Aerodynamics',
-    description: 'Reduced air drag improves high-speed performance',
-    maxLevel: 6,
-    baseCost: 250,
-    costMultiplier: 1.8,
-    valuePerLevel: 0.04,
-  ));
-}
-
-// ============================================================
-// App Widget -- MG Design System Theme
-// ============================================================
-class CartoonRacingApp extends StatelessWidget {
-  const CartoonRacingApp({super.key});
+  static const gameId = 'MG-0018';
+  static const gameTitle = 'Cartoon Racing RPG';
+  static const coreFunLoop = kCoreFunLoop;
 
   @override
   Widget build(BuildContext context) {
-    return MGAccessibilityProvider(
-      settings: MGAccessibilitySettings.defaults,
-      onSettingsChanged: (settings) {
-        // Settings updated
-      },
-      child: MaterialApp(
-      title: RacingConfig.gameTitle,
-                localizationsDelegates: mgLocalizationDelegates,
+    return MaterialApp(
+      title: gameTitle,
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        brightness: Brightness.dark,
-        primaryColor: MGColors.year2Primary,
-        scaffoldBackgroundColor: MGColors.backgroundDark,
-        colorScheme: ColorScheme.dark(
-          primary: MGColors.year2Primary,
-          secondary: MGColors.year2Accent,
-          surface: MGColors.surfaceDark,
-          error: MGColors.error,
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color(0xFFE53935),
+          brightness: Brightness.dark,
         ),
-        appBarTheme: AppBarTheme(
-          backgroundColor: MGColors.surfaceDark,
-          foregroundColor: MGColors.textHighEmphasis,
-          elevation: 0,
-          centerTitle: true,
-          titleTextStyle: MGTextStyles.h2.copyWith(
-            color: MGColors.textHighEmphasis,
-          ),
-        ),
-        elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: MGColors.year2Primary,
-            foregroundColor: MGColors.textHighEmphasis,
-            padding: MGSpacing.buttonEdgePadding,
-            textStyle: MGTextStyles.button,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(MGSpacing.xs),
-            ),
-          ),
-        ),
-        textTheme: TextTheme(
-          headlineLarge: MGTextStyles.h1,
-          headlineMedium: MGTextStyles.h2,
-          headlineSmall: MGTextStyles.h3,
-          bodyLarge: MGTextStyles.body,
-          bodyMedium: MGTextStyles.bodySmall,
-          labelLarge: MGTextStyles.button,
-        ),
+        useMaterial3: true,
       ),
       routes: {
-        '/daily-hub': (context) => DailyHubScreen(
-          questManager: GetIt.I<DailyQuestManager>(),
-          loginRewardsManager: GetIt.I<LoginRewardsManager>(),
-          streakManager: GetIt.I<StreakManager>(),
-          challengeManager: GetIt.I<DailyChallengeManager>(),
-          accentColor: MGColors.primaryAction,
-          onClose: () => Navigator.pop(context),
-        ),
-      
-        '/collection': (context) => CollectionScreen(
-          collectionManager: GetIt.I<CollectionManager>(),
-        ),
-        '/guild-war': (context) => GuildWarScreen(
-          guildWarManager: GetIt.I<GuildWarManager>(),
-          accentColor: MGColors.primaryAction,
-          onClose: () => Navigator.pop(context),
-          ),
-        '/tournament': (context) => TournamentScreen(
-          tournamentManager: GetIt.I<TournamentManager>(),
-          accentColor: MGColors.primaryAction,
-          onClose: () => Navigator.pop(context),
-          ),
-        '/seasonal-event': (context) => SeasonalEventScreen(
-          seasonalContentManager: GetIt.I<SeasonalContentManager>(),
-          accentColor: MGColors.primaryAction,
-          onClose: () => Navigator.pop(context),
-        ),
-        '/friends': (context) => FriendsScreen(
-          title: 'FRIENDS',
-          onClose: () => Navigator.pop(context),
-          accentColor: MGColors.primaryAction,
-        ),
-        '/leaderboard': (context) => SocialLeaderboardScreen(
-          title: 'LEADERBOARD',
-          leaderboardId: 'mg_bubble_shooter_all_time',
-          onClose: () => Navigator.pop(context),
-          accentColor: MGColors.primaryAction,
-        ),
+        '/game': (_) => const GameScreen(),
+        '/engine': (_) => const FrameLoopScreen(),
+        '/levels': (_) => const LevelRoadmapScreen(),
+        '/daily': (_) => const DailyHubScreen(),
+        '/retention': (_) => const RetentionHubScreen(),
+        '/guild-war': (_) => const GuildWarScreen(),
+        '/tournament': (_) => const TournamentScreen(),
+        '/seasonal-event': (_) => const SeasonalEventScreen(),
       },
-      home: const MainScreen(),
-    ),
+      home: const MainMenuScreen(),
     );
   }
 }
 
-// ============================================================
-// Racing Configuration Constants
-// ============================================================
-class RacingConfig {
-  RacingConfig._();
+class MainMenuScreen extends StatelessWidget {
+  const MainMenuScreen({super.key});
 
-  /// Game Identity
-  static const String gameId = 'MG-0018';
-  static const String gameTitle = 'Cartoon Racing RPG';
-  static const String gameVersion = '1.0.0';
-
-  /// Physics Base Values
-  static const double baseAcceleration = 5.0;
-  static const double baseMaxSpeed = 20.0;
-  static const double baseFriction = 0.95;
-  static const double baseTurnSpeed = 3.0;
-  static const double baseBraking = 8.0;
-
-  /// Nitro System
-  static const double defaultNitroCapacity = 100.0;
-  static const double nitroRechargeRate = 5.0;
-  static const double nitroSpeedMultiplier = 1.5;
-  static const double nitroDrainRate = 20.0;
-
-  /// Race Defaults
-  static const int defaultLapCount = 3;
-  static const int defaultOpponentCount = 5;
-  static const int totalCheckpointsPerLap = 4;
-
-  /// Economy Rewards
-  static const int winRewardBase = 500;
-  static const int lapBonusBase = 100;
-  static const int perfectLapBonus = 250;
-  static const int topThreeMultiplier = 2;
-
-  /// Difficulty Scaling
-  static const double easySpeedMultiplier = 0.85;
-  static const double normalSpeedMultiplier = 1.0;
-  static const double hardSpeedMultiplier = 1.2;
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: SafeArea(
+        child: Center(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(24),
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 480),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  const Icon(Icons.videogame_asset_rounded, size: 72),
+                  const SizedBox(height: 24),
+                  Text(
+                    MyApp.gameId,
+                    key: const ValueKey('game-id'),
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.headlineMedium,
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    MyApp.gameTitle,
+                    key: const ValueKey('game-title'),
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    'Core Fun: ${MyApp.coreFunLoop}',
+                    key: const ValueKey('core-fun-loop'),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 32),
+                  FilledButton.icon(
+                    key: const ValueKey('start-game'),
+                    onPressed: () => Navigator.of(context).pushNamed('/game'),
+                    icon: const Icon(Icons.play_arrow_rounded),
+                    label: const Text('Start Game'),
+                  ),
+                  const SizedBox(height: 12),
+                  OutlinedButton.icon(
+                    key: const ValueKey('level-roadmap'),
+                    onPressed: () => Navigator.of(context).pushNamed('/levels'),
+                    icon: const Icon(Icons.map_rounded),
+                    label: const Text('Level Roadmap'),
+                  ),
+                  const SizedBox(height: 12),
+                  Wrap(
+                    alignment: WrapAlignment.center,
+                    spacing: 8,
+                    runSpacing: 8,
+                    children: const [
+                      _MenuAction(
+                        route: '/engine',
+                        buttonKey: ValueKey('engine-loop'),
+                        icon: Icons.memory_rounded,
+                        label: 'Engine',
+                      ),
+                      _MenuAction(
+                        route: '/retention',
+                        buttonKey: ValueKey('rewards'),
+                        icon: Icons.card_giftcard_rounded,
+                        label: 'Rewards',
+                      ),
+                      _MenuAction(
+                        route: '/daily',
+                        buttonKey: ValueKey('daily-quests'),
+                        icon: Icons.today_rounded,
+                        label: 'Daily',
+                      ),
+                      _MenuAction(
+                        route: '/guild-war',
+                        buttonKey: ValueKey('guild-war'),
+                        icon: Icons.groups_rounded,
+                        label: 'Guild',
+                      ),
+                      _MenuAction(
+                        route: '/tournament',
+                        buttonKey: ValueKey('tournament'),
+                        icon: Icons.emoji_events_rounded,
+                        label: 'Tournament',
+                      ),
+                      _MenuAction(
+                        route: '/seasonal-event',
+                        buttonKey: ValueKey('seasonal-event'),
+                        icon: Icons.event_rounded,
+                        label: 'Event',
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 }
 
+class _MenuAction extends StatelessWidget {
+  const _MenuAction({
+    required this.route,
+    required this.buttonKey,
+    required this.icon,
+    required this.label,
+  });
 
-void _registerDailyQuests() {
-  final dailyQuest = GetIt.I<DailyQuestManager>();
+  final String route;
+  final ValueKey<String> buttonKey;
+  final IconData icon;
+  final String label;
 
-  dailyQuest.registerQuest(DailyQuest(
-    id: 'craft_items',
-    title: '아이템 제작',
-    description: '아이템 8개 제작',
-    targetValue: 8,
-    goldReward: 500,
-    xpReward: 10,
-  ));
-
-  dailyQuest.registerQuest(DailyQuest(
-    id: 'sell_crafts',
-    title: '제작품 판매',
-    description: '제작품 10개 판매',
-    targetValue: 10,
-    goldReward: 300,
-    xpReward: 5,
-  ));
-
-  dailyQuest.registerQuest(DailyQuest(
-    id: 'unlock_blueprints',
-    title: '청사진 해금',
-    description: '새 청사진 2개 해금',
-    targetValue: 2,
-    goldReward: 200,
-    xpReward: 3,
-  ));
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 132,
+      child: OutlinedButton.icon(
+        key: buttonKey,
+        onPressed: () => Navigator.of(context).pushNamed(route),
+        icon: Icon(icon),
+        label: Text(label),
+      ),
+    );
+  }
 }
 
+class GameScreen extends StatefulWidget {
+  const GameScreen({super.key});
 
-void _registerAchievements() {
-  final achievement = GetIt.I<AchievementManager>();
-  
-  achievement.registerAchievement(Achievement(
-    id: 'gold_1000',
-    title: '골드 1000 달성',
-    description: '총 골드 1000을 모으세요',
-    iconAsset: 'assets/achievements/gold_1000.png',
-  ));
-  
-  achievement.registerAchievement(Achievement(
-    id: 'level_10',
-    title: '레벨 10 달성',
-    description: '레벨 10에 도달하세요',
-    iconAsset: 'assets/achievements/level_10.png',
-  ));
-  
-  achievement.registerAchievement(Achievement(
-    id: 'play_100',
-    title: '100판 플레이',
-    description: '게임을 100판 플레이하세요',
-    iconAsset: 'assets/achievements/play_100.png',
-  ));
+  @override
+  State<GameScreen> createState() => _GameScreenState();
 }
 
-void _registerCollections() {
-  final collection = GetIt.I<CollectionManager>();
+class _GameScreenState extends State<GameScreen> {
+  int levelIndex = 0;
+  int goldBank = 0;
+  int xpBank = 0;
 
-  // Characters 컬렉션
-  collection.registerCollection(Collection(
-    id: 'characters',
-    name: '캐릭터',
-    description: '모든 캐릭터를 수집하세요',
-    items: [
-      CollectionItem(
-        id: 'char_warrior',
-        name: '전사',
-        description: '강인한 근접 전투 캐릭터',
-        rarity: CollectionRarity.common,
-      ),
-      CollectionItem(
-        id: 'char_mage',
-        name: '마법사',
-        description: '강력한 마법 공격 캐릭터',
-        rarity: CollectionRarity.rare,
-      ),
-      CollectionItem(
-        id: 'char_archer',
-        name: '궁수',
-        description: '원거리 정밀 공격 캐릭터',
-        rarity: CollectionRarity.rare,
-      ),
-      CollectionItem(
-        id: 'char_assassin',
-        name: '암살자',
-        description: '치명적인 은신 공격 캐릭터',
-        rarity: CollectionRarity.epic,
-      ),
-      CollectionItem(
-        id: 'char_healer',
-        name: '힐러',
-        description: '팀을 치유하는 지원 캐릭터',
-        rarity: CollectionRarity.legendary,
-      ),
-    ],
-    completionReward: CollectionReward(type: RewardType.gold, amount: 10000),
-    milestoneRewards: {
-      25: CollectionReward(type: RewardType.gold, amount: 1000),
-      50: CollectionReward(type: RewardType.gold, amount: 3000),
-      75: CollectionReward(type: RewardType.gold, amount: 5000),
-    },
-  ));
+  GameLevelDesign get currentLevel => kLevelDesign[levelIndex];
 
-  // 아이템 해제 콜백 (햅틱 피드백)
-  collection.onItemUnlocked = (collectionId, itemId) {
-    // SettingsManager가 등록되어 있으면 햅틱 피드백
-    debugPrint('Collection item unlocked: $collectionId / $itemId');
-  };
+  void completeAction() {
+    setState(() {
+      goldBank += currentLevel.goldReward;
+      xpBank += currentLevel.xpReward;
+      if (levelIndex < kLevelDesign.length - 1) {
+        levelIndex += 1;
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final level = currentLevel;
+    final spawn = kWaveSpawnTable[levelIndex];
+    return Scaffold(
+      appBar: AppBar(title: const Text('Game Ready')),
+      body: Center(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(24),
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 480),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Text(
+                  'Primary loop: ${MyApp.coreFunLoop}',
+                  key: const ValueKey('primary-loop'),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 20),
+                Text(
+                  'Level ${level.levelIndex} - ${level.stage}',
+                  key: const ValueKey('level-name'),
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  'Objective: ${level.objective}',
+                  key: const ValueKey('level-objective'),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  'Wave ${level.wave} | Difficulty ${level.difficulty.toStringAsFixed(2)}',
+                  key: const ValueKey('difficulty-label'),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  'Pressure: ${spawn.enemyCount} enemies every '
+                  '${spawn.spawnCadenceSeconds.toStringAsFixed(2)}s',
+                  key: const ValueKey('pressure-label'),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 16),
+                LinearProgressIndicator(
+                  value: (level.levelIndex / kLevelDesign.length).clamp(0.0, 1.0),
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  'Reward bank: $goldBank gold / $xpBank xp',
+                  key: const ValueKey('reward-bank'),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 20),
+                FilledButton.icon(
+                  key: const ValueKey('complete-action'),
+                  onPressed: completeAction,
+                  icon: const Icon(Icons.check_circle_rounded),
+                  label: const Text('Complete Action'),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _FrameLoopGame extends FlameGame {
+  double elapsedSeconds = 0;
+  int frameTicks = 0;
+
+  @override
+  void update(double dt) {
+    elapsedSeconds += dt;
+    frameTicks += 1;
+    super.update(dt);
+  }
+}
+
+class FrameLoopScreen extends StatelessWidget {
+  const FrameLoopScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Engine Loop')),
+      body: Column(
+        children: [
+          const Padding(
+            padding: EdgeInsets.all(16),
+            child: Text(
+              'GameWidget frame loop is active for runtime input, update, and render validation.',
+              key: ValueKey('engine-loop-status'),
+              textAlign: TextAlign.center,
+            ),
+          ),
+          Expanded(child: GameWidget(game: _FrameLoopGame())),
+        ],
+      ),
+    );
+  }
+}
+
+class LevelRoadmapScreen extends StatelessWidget {
+  const LevelRoadmapScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Level Roadmap')),
+      body: ListView.builder(
+        key: const ValueKey('level-list'),
+        padding: const EdgeInsets.all(16),
+        itemCount: kLevelDesign.length,
+        itemBuilder: (context, index) {
+          final level = kLevelDesign[index];
+          final spawn = kWaveSpawnTable[index];
+          return ListTile(
+            leading: CircleAvatar(child: Text('${level.levelIndex}')),
+            title: Text('Level ${level.levelIndex} - ${level.stage}'),
+            subtitle: Text(
+              'Wave ${level.wave} | difficulty ${level.difficulty.toStringAsFixed(2)} | '
+              '${spawn.enemyCount} enemies | reward ${level.goldReward}g/${level.xpReward}xp',
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+
+class DailyHubScreen extends StatelessWidget {
+  const DailyHubScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const _SimpleScreen(
+      title: 'Daily Quests',
+      detail: 'Short goals keep the fun loop moving.',
+      icon: Icons.today_rounded,
+    );
+  }
+}
+
+class RetentionHubScreen extends StatelessWidget {
+  const RetentionHubScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const _SimpleScreen(
+      title: 'Rewards',
+      detail: 'Progression loop: return, claim, improve.',
+      icon: Icons.card_giftcard_rounded,
+    );
+  }
+}
+
+class GuildWarScreen extends StatelessWidget {
+  const GuildWarScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const _SimpleScreen(
+      title: 'Guild War',
+      detail: 'Social competition is reachable from the main loop.',
+      icon: Icons.groups_rounded,
+    );
+  }
+}
+
+class TournamentScreen extends StatelessWidget {
+  const TournamentScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const _SimpleScreen(
+      title: 'Tournament',
+      detail: 'Competitive goals are available for mastery.',
+      icon: Icons.emoji_events_rounded,
+    );
+  }
+}
+
+class SeasonalEventScreen extends StatelessWidget {
+  const SeasonalEventScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const _SimpleScreen(
+      title: 'Seasonal Event',
+      detail: 'Timed content gives the loop a fresh reason to return.',
+      icon: Icons.event_rounded,
+    );
+  }
+}
+
+class _SimpleScreen extends StatelessWidget {
+  const _SimpleScreen({required this.title, required this.detail, required this.icon});
+
+  final String title;
+  final String detail;
+  final IconData icon;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text(title)),
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(icon, size: 56),
+              const SizedBox(height: 16),
+              Text(
+                title,
+                key: const ValueKey('screen-title'),
+                style: Theme.of(context).textTheme.headlineSmall,
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 8),
+              Text(detail, key: const ValueKey('screen-detail'), textAlign: TextAlign.center),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 }
